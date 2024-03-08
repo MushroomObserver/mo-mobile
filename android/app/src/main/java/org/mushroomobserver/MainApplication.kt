@@ -1,4 +1,4 @@
-package com.mushroomobserver
+package org.mushroomobserver
 
 import android.app.Application
 import com.facebook.react.PackageList

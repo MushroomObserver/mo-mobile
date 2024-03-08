@@ -1,4 +1,4 @@
-package com.mushroomobserver
+package org.mushroomobserver
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
