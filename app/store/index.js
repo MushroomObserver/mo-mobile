@@ -21,13 +21,13 @@ import {
   REHYDRATE,
 } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
-// import FilesystemStorage from 'redux-persist-filesystem-storage';
+import FilesystemStorage from 'redux-persist-filesystem-storage';
 import createSensitiveStorage from 'redux-persist-sensitive-storage';
 
 const mainPersistConfig = {
   key: 'main',
   version: 1,
-  storage: storage ,
+  storage: FilesystemStorage ,
   blacklist: ['auth', mushroomObserverApi.reducerPath, googleApi.reducerPath],
 };
 

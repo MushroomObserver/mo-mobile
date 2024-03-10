@@ -26,9 +26,9 @@ import {
 } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React, { useEffect } from 'react';
-// import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { View } from 'react-native-ui-lib';
-// import Icon from 'react-native-vector-icons/FontAwesome5';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 // import { OverflowMenuProvider } from 'react-navigation-header-buttons';
 import { connect, ConnectedProps, useDispatch, useSelector } from 'react-redux';
 
@@ -46,14 +46,14 @@ const LoginStack = () => {
   const isLogout = useIsLogout();
   return (
     <LoginStackNavigator>
-      {/* <LoginStackScreen
+      <LoginStackScreen
         name="Login"
         component={Login}
         options={{
           headerShown: false,
           animationTypeForReplace: isLogout ? 'pop' : 'push',
         }}
-      /> */}
+      />
       <LoginStackScreen
         name="Register"
         component={Register}
@@ -70,36 +70,36 @@ const LoginStack = () => {
 };
 
 const HomeTabs = ({ draftObservationCount }: PropsFromRedux) => (
-  // <HomeTabsNavigator initialRouteName="My Drafts">
-  //   <HomeTabsScreen
-  //     name="My Observations"
-  //     component={ListObservations}
-  //     options={{
-  //       tabBarIcon: ({ color, size }) => (
-  //         <Icon name="list-alt" size={size} color={color} />
-  //       ),
-  //     }}
-  //   />
-  //   <HomeTabsScreen
-  //     name="My Drafts"
-  //     component={ListDrafts}
-  //     options={{
-  //       tabBarBadge:
-  //         draftObservationCount > 0 ? draftObservationCount : undefined,
-  //       tabBarIcon: ({ color, size }) => (
-  //         <Icon name="clipboard-list" size={size} color={color} />
-  //       ),
-  //     }}
-  //   />
-  //   <HomeTabsScreen
-  //     name="Settings"
-  //     component={Settings}
-  //     options={{
-  //       tabBarIcon: ({ color, size }) => (
-  //         <Icon name="cog" size={size} color={color} />
-  //       ),
-  //     }}
-  //   />
+  <HomeTabsNavigator initialRouteName="My Drafts">
+    <HomeTabsScreen
+      name="My Observations"
+      component={ListObservations}
+      options={{
+        tabBarIcon: ({ color, size }) => (
+          <Icon name="list-alt" size={size} color={color} />
+        ),
+      }}
+    />
+    <HomeTabsScreen
+      name="My Drafts"
+      component={ListDrafts}
+      options={{
+        tabBarBadge:
+          draftObservationCount > 0 ? draftObservationCount : undefined,
+        tabBarIcon: ({ color, size }) => (
+          <Icon name="clipboard-list" size={size} color={color} />
+        ),
+      }}
+    />
+    <HomeTabsScreen
+      name="Settings"
+      component={Settings}
+      options={{
+        tabBarIcon: ({ color, size }) => (
+          <Icon name="cog" size={size} color={color} />
+        ),
+      }}
+    />
     {/* {__DEV__ && (
       <HomeTabsScreen
         name="Developer"
@@ -111,7 +111,7 @@ const HomeTabs = ({ draftObservationCount }: PropsFromRedux) => (
         }}
       />
     )} */}
-  // </HomeTabsNavigator>
+  </HomeTabsNavigator>
 );
 
 const mapStateToProps = (state: any, ownProps: any) => ({
@@ -125,28 +125,27 @@ const ConnectedHomeTabs = connector(HomeTabs);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 const HomeStack = () => (
-  <Text>HOME</Text>
-  // <HomeStackNavigator>
-  //   <HomeStackScreen
-  //     name="Home"
-  //     component={ConnectedHomeTabs}
-  //     options={{ headerShown: false }}
-  //   />
-  //   <HomeStackScreen
-  //     name="Create Draft"
-  //     component={CreateDraft}
-  //     options={{ presentation: 'card' }}
-  //   />
-  //   <HomeStackScreen
-  //     name="Edit Draft"
-  //     component={CreateDraft}
-  //     options={{ presentation: 'card' }}
-  //   />
-  //   <HomeStackScreen name="View Observation" component={ViewObservation} />
-  //   <HomeStackScreen name="Edit Observation" component={EditObservation} />
-  //   <HomeStackScreen name="Create Photo" component={CreatePhoto} />
-  //   <HomeStackScreen name="View Photo" component={ViewPhoto} />
-  // </HomeStackNavigator>
+  <HomeStackNavigator>
+    <HomeStackScreen
+      name="Home"
+      component={ConnectedHomeTabs}
+      options={{ headerShown: false }}
+    />
+    <HomeStackScreen
+      name="Create Draft"
+      component={CreateDraft}
+      options={{ presentation: 'card' }}
+    />
+    <HomeStackScreen
+      name="Edit Draft"
+      component={CreateDraft}
+      options={{ presentation: 'card' }}
+    />
+    <HomeStackScreen name="View Observation" component={ViewObservation} />
+    <HomeStackScreen name="Edit Observation" component={EditObservation} />
+    <HomeStackScreen name="Create Photo" component={CreatePhoto} />
+    <HomeStackScreen name="View Photo" component={ViewPhoto} />
+  </HomeStackNavigator>
 );
 
 const App = () => {
@@ -165,7 +164,7 @@ const App = () => {
   });
 
   return (
-    // <Text>APP</Text>
+    <SafeAreaProvider>
       <View flex>
         <FlashView info={info} />
         <FlashView warning={warning} />
@@ -174,7 +173,7 @@ const App = () => {
             {!user ? <LoginStack /> : <HomeStack />}
         </NavigationContainer>
       </View>
-    // </SafeAreaProvider>
+    </SafeAreaProvider>
   );
 };
 

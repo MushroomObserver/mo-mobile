@@ -18,6 +18,7 @@ import Config from 'react-native-config';
 const API_URL = Config.MUSHROOM_OBSERVER_API_URL;
 const API_KEY = Config.MUSHROOM_OBSERVER_API_KEY;
 
+console.log("#### CONFIG STUFF:", Config)
 /*
  * This is only used to encode query params that have been typed
  * so the 'any' type is fine just here. Otherwise we like types.

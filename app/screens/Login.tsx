@@ -32,6 +32,7 @@ const Login = ({ loginSuccess }: PropsFromRedux) => {
     if (!response.isLoading) {
       getApiKeyForUser({
         api_key: Config.MUSHROOM_OBSERVER_API_KEY,
+        // api_key: '7eng18x03v6893lxe95xmlrvdwebdct0', //Config.MUSHROOM_OBSERVER_API_KEY,
         for_user: username,
         password,
         app: 'Mushroom Observer Mobile',
