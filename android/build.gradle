@@ -1,3 +1,8 @@
+project.ext.envConfigFiles = [
+    debug: ".env.development",
+    release: ".env.production",
+]
+
 buildscript {
     ext {
         buildToolsVersion = "34.0.0"
