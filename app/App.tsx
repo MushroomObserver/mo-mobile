@@ -18,13 +18,13 @@ import { preloadLocations } from './store/locations';
 import { preloadNames } from './store/names';
 import { LoginStackParamList } from './types/navigation';
 // import { connectActionSheet } from '@expo/react-native-action-sheet';
-// import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useReduxDevToolsExtension } from '@react-navigation/devtools';
 import {
   NavigationContainer,
   useNavigationContainerRef,
 } from '@react-navigation/native';
-// import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React, { useEffect } from 'react';
 // import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { View } from 'react-native-ui-lib';
@@ -32,37 +32,40 @@ import { View } from 'react-native-ui-lib';
 // import { OverflowMenuProvider } from 'react-navigation-header-buttons';
 import { connect, ConnectedProps, useDispatch, useSelector } from 'react-redux';
 
-// const { Navigator: LoginStackNavigator, Screen: LoginStackScreen } =
-//   createNativeStackNavigator<LoginStackParamList>();
-// const {
-//   Navigator: HomeStackNavigator,
-//   Group: HomeStackGroup,
-//   Screen: HomeStackScreen,
-// } = createNativeStackNavigator();
-// const { Navigator: HomeTabsNavigator, Screen: HomeTabsScreen } =
-//   createBottomTabNavigator();
+const { Navigator: LoginStackNavigator, Screen: LoginStackScreen } =
+  createNativeStackNavigator<LoginStackParamList>();
+const {
+  Navigator: HomeStackNavigator,
+  Group: HomeStackGroup,
+  Screen: HomeStackScreen,
+} = createNativeStackNavigator();
+const { Navigator: HomeTabsNavigator, Screen: HomeTabsScreen } =
+  createBottomTabNavigator();
 
 const LoginStack = () => {
   const isLogout = useIsLogout();
   return (
-    // <LoginStackNavigator>
-    //   <LoginStackScreen
-    //     name="Login"
-    //     component={Login}
-    //     options={{
-    //       headerShown: false,
-    //       animationTypeForReplace: isLogout ? 'pop' : 'push',
-    //     }}
-    //   />
-    //   <LoginStackScreen
-    //     name="Register"
-    //     component={Register}
-    //     options={{
-    //       title: 'Register',
-    //     }}
-    //   />
-    // </LoginStackNavigator>
-    <Text>LOGIN STACK</Text>
+    <LoginStackNavigator>
+      {/* <LoginStackScreen
+        name="Login"
+        component={Login}
+        options={{
+          headerShown: false,
+          animationTypeForReplace: isLogout ? 'pop' : 'push',
+        }}
+      /> */}
+      <LoginStackScreen
+        name="Register"
+        component={Register}
+        options={{
+          title: 'Register',
+        }}
+      />
+    </LoginStackNavigator>
+    // <View>
+    // <Text>LOGIN STACK</Text>
+    // <Text>{isLogout.toString()}</Text>
+    // </View>
   );
 };
 
@@ -154,7 +157,7 @@ const App = () => {
   const warning = useSelector(selectWarning);
   const info = useSelector(selectInfo);
 
-  // useReduxDevToolsExtension(navigationRef);
+  useReduxDevToolsExtension(navigationRef);
 
   useEffect(() => {
     dispatch(preloadNames(undefined));
@@ -171,6 +174,7 @@ const App = () => {
             {!user ? <LoginStack /> : <HomeStack />}
         </NavigationContainer>
       </View>
+    // </SafeAreaProvider>
   );
 };
 
