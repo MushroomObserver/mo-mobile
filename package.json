@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@expo/react-native-action-sheet": "^4.0.1",
+    "@react-native-community/datetimepicker": "^7.6.2",
     "@react-navigation/bottom-tabs": "^6.5.16",
     "@react-navigation/devtools": "^6.0.23",
     "@react-navigation/native-stack": "^6.9.22",
@@ -52,6 +53,7 @@
     "jest": "^29.6.3",
     "metro-react-native-babel-preset": "^0.77.0",
     "prettier": "2.8.8",
+    "react-native-flipper": "^0.212.0",
     "react-test-renderer": "18.2.0",
     "typescript": "5.0.4"
   },
