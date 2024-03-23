@@ -61,7 +61,7 @@ const Login = ({ loginSuccess }: PropsFromRedux) => {
   return (
     <View flex>
       <ScrollView>
-        {/* <SafeAreaView> */}
+        <SafeAreaView>
           <View paddingH-20>
             <Image marginB-15 logo />
             <FormGroup>
@@ -133,7 +133,7 @@ const Login = ({ loginSuccess }: PropsFromRedux) => {
               </Text>
             </View>
           </View>
-        {/* </SafeAreaView> */}
+        </SafeAreaView>
       </ScrollView>
       {response.isLoading && (
         <LoaderScreen

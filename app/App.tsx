@@ -11,13 +11,12 @@ import Register from './screens/Register';
 import Settings from './screens/Settings';
 import ViewObservation from './screens/ViewObservation';
 import ViewPhoto from './screens/ViewPhoto';
-import { Text } from 'react-native-ui-lib';
 import { selectTotal as selectDraftObservationTotal } from './store/draftObservations';
 import { selectError, selectInfo, selectWarning } from './store/flash';
 import { preloadLocations } from './store/locations';
 import { preloadNames } from './store/names';
 import { LoginStackParamList } from './types/navigation';
-// import { connectActionSheet } from '@expo/react-native-action-sheet';
+import { connectActionSheet } from '@expo/react-native-action-sheet';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useReduxDevToolsExtension } from '@react-navigation/devtools';
 import {
@@ -29,7 +28,7 @@ import React, { useEffect } from 'react';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { View } from 'react-native-ui-lib';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-// import { OverflowMenuProvider } from 'react-navigation-header-buttons';
+import { HeaderButtonsProvider  } from 'react-navigation-header-buttons';
 import { connect, ConnectedProps, useDispatch, useSelector } from 'react-redux';
 
 const { Navigator: LoginStackNavigator, Screen: LoginStackScreen } =
@@ -62,10 +61,6 @@ const LoginStack = () => {
         }}
       />
     </LoginStackNavigator>
-    // <View>
-    // <Text>LOGIN STACK</Text>
-    // <Text>{isLogout.toString()}</Text>
-    // </View>
   );
 };
 
@@ -100,7 +95,7 @@ const HomeTabs = ({ draftObservationCount }: PropsFromRedux) => (
         ),
       }}
     />
-    {__DEV__ && (
+    {/* {__DEV__ && (
       <HomeTabsScreen
         name="Developer"
         component={DevScreen}
@@ -110,7 +105,7 @@ const HomeTabs = ({ draftObservationCount }: PropsFromRedux) => (
           ),
         }}
       />
-    )}
+    )} */}
   </HomeTabsNavigator>
 );
 
@@ -170,11 +165,13 @@ const App = () => {
         <FlashView warning={warning} />
         <FlashView error={error} />
         <NavigationContainer ref={navigationRef}>
+          <HeaderButtonsProvider stackType='native'> 
             {!user ? <LoginStack /> : <HomeStack />}
+          </HeaderButtonsProvider >
         </NavigationContainer>
       </View>
     </SafeAreaProvider>
   );
 };
 
-export default App;//connectActionSheet(App);
+export default connectActionSheet(App);
