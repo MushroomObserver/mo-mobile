@@ -46,6 +46,7 @@ const Login = ({ loginSuccess }: PropsFromRedux) => {
         user,
         results: [{ key }],
       } = response.data;
+      console.log("#### LOGIN SUCCESS", response);
       loginSuccess({ login_name: username, id: user, key });
     } else if (response.error) {
       setLoginFailed(true);
@@ -53,10 +54,6 @@ const Login = ({ loginSuccess }: PropsFromRedux) => {
 
     console.log("### RESPONSE", response)
   }, [response, username]);
-
-  useEffect(() => {
-    console.log("### RESPONSE", response)
-  }, [response]);
 
   return (
     <View flex>
@@ -100,7 +97,7 @@ const Login = ({ loginSuccess }: PropsFromRedux) => {
                 onChangeText={onChangePassword}
                 onSubmitEditing={submitLogin}
                 value={password}
-                validate={['required', () => loginFailed]}
+                validate={['required', loginFailed]}
                 validationMessage={[
                   'Password is required',
                   'Incorrect username or password',
@@ -140,6 +137,14 @@ const Login = ({ loginSuccess }: PropsFromRedux) => {
           color={Colors.blue30}
           backgroundColor={Colors.grey50}
           message="Loading..."
+          overlay
+        />
+      )}
+      {response.status === 'fulfilled' && (
+        <LoaderScreen
+          color={Colors.blue30}
+          backgroundColor={Colors.grey50}
+          message={`Success!`}
           overlay
         />
       )}
