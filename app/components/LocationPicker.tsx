@@ -20,6 +20,7 @@ const LocationPicker = ({
   const dispatch = useDispatch();
 
   useEffect(() => {
+    console.log("### QUERY", query.length)
     if(query.length > 0) {
       const newResults = orderBy(
         filter(locations, ({ name }) =>
@@ -38,6 +39,7 @@ const LocationPicker = ({
         [({lastUsed}) => lastUsed],
         ['asc'],
       );
+      console.log("### NEW RESULTS", newResults)
       setResults(newResults);
     }
   }, [query]);
@@ -73,6 +75,7 @@ const LocationPicker = ({
         onChange={(value) => {
           const newLoc = find(locations, (loc: Location) => loc.name === value);
           dispatch(updateLastUsed({id: newLoc.id, name: newLoc.name, lastUsed: Date.now()}))
+          console.log("### UPDTATED", newLoc)
           onChangeLocation(value);
         }}
         onSearchChange={setQuery}
