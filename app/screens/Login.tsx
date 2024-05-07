@@ -20,18 +20,22 @@ import { connect, ConnectedProps } from 'react-redux';
 const Login = ({ loginSuccess }: PropsFromRedux) => {
   const navigation = useNavigation();
   const [username, onChangeUsername] = useState('');
-  const [password, onChangePassword] = useState('');
+  const [password, setPassword] = useState('');
   const [loginFailed, setLoginFailed] = useState<boolean>(false);
   const usernameInput = useRef<typeof TextField>();
   const passwordInput = useRef<typeof TextField>();
 
   const [getApiKeyForUser, response] = useGetApiKeyForUserMutation();
 
+  const onChangePassword = (val: string) => {
+    setPassword(val);
+    setLoginFailed(false);
+  }
+
   const submitLogin = () => {
-    console.log("#### SUBMIT LOGIN", response)
     if (!response.isLoading) {
       getApiKeyForUser({
-        api_key: Config.MUSHROOM_OBSERVER_API_KEY,
+        api_key: Config.MUSHROOM_OBSERVER_API_KEY || "",
         for_user: username,
         password,
         app: 'Mushroom Observer Mobile',
@@ -49,14 +53,13 @@ const Login = ({ loginSuccess }: PropsFromRedux) => {
       loginSuccess({ login_name: username, id: user, key });
     } else if (response.error) {
       setLoginFailed(true);
+
+      // Force a blur event on the password input to get validation updates
+      passwordInput.current?.focus();
+      usernameInput.current?.focus();
     }
 
-    console.log("### RESPONSE", response)
   }, [response, username]);
-
-  useEffect(() => {
-    console.log("### RESPONSE", response)
-  }, [response]);
 
   return (
     <View flex>
@@ -94,17 +97,18 @@ const Login = ({ loginSuccess }: PropsFromRedux) => {
                 autoCapitalize="none"
                 label="Password"
                 textContentType="password"
-                returnKeyType="done"
+                returnKeyType="send"
                 enablesReturnKeyAutomatically
                 secureTextEntry
                 onChangeText={onChangePassword}
                 onSubmitEditing={submitLogin}
                 value={password}
-                validate={['required', () => loginFailed]}
+                validate={['required', () => !loginFailed]}
                 validationMessage={[
                   'Password is required',
                   'Incorrect username or password',
                 ]}
+                validateOnChange={true}
               />
             </FormGroup>
             <View marginT-s4 row spread>
@@ -140,6 +144,14 @@ const Login = ({ loginSuccess }: PropsFromRedux) => {
           color={Colors.blue30}
           backgroundColor={Colors.grey50}
           message="Loading..."
+          overlay
+        />
+      )}
+      {response.status === 'fulfilled' && (
+        <LoaderScreen
+          color={Colors.blue30}
+          backgroundColor={Colors.grey50}
+          message={`Success!`}
           overlay
         />
       )}
