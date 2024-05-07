@@ -1,13 +1,13 @@
-import { Location, selectAll } from '../store/locations';
-import { filter, lowerCase, orderBy } from 'lodash';
-import React, { useState } from 'react';
-import { Button, Colors, Incubator, Picker, View } from 'react-native-ui-lib';
-import { connect } from 'react-redux';
+import { Location, selectAll, updateLastUsed } from '../store/locations';
+import { filter, lowerCase, orderBy, find } from 'lodash';
+import React, { useState, useEffect } from 'react';
+import { Button, Colors, Incubator, Picker, PickerValue, View } from 'react-native-ui-lib';
+import { connect, useDispatch } from 'react-redux';
 
 interface LocationPickerProps {
   location: string;
   locations: Location[];
-  onChangeLocation: Function;
+  onChangeLocation:   (value: PickerValue) => void;
 }
 
 const LocationPicker = ({
@@ -16,13 +16,45 @@ const LocationPicker = ({
   onChangeLocation,
 }: LocationPickerProps) => {
   const [query, setQuery] = useState('');
+  const [searchResults, setResults] = useState<ArrayLike<any> | null | undefined>();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if(query.length > 0) {
+      const newResults = orderBy(
+        filter(locations, ({ name }) =>
+          lowerCase(name).includes(lowerCase(query)),
+        ),
+        [({lastUsed}) => lastUsed, ({ name }) => name.toLowerCase()],
+        ['asc'],
+      );
+      
+      setResults(newResults);
+    } else {
+      const newResults = orderBy(
+        filter(locations, ({ lastUsed }) =>
+          lastUsed !== undefined,
+        ),
+        [({lastUsed}) => lastUsed],
+        ['asc'],
+      );
+      setResults(newResults);
+    }
+  }, [query]);
+  
+  const renderItem = ({ item }: { item: Location }) => {
+    if(item.lastUsed) {
+      return <Picker.Item key={item.id} value={item.name} label={item.name} labelStyle={{color: Colors.$textDefault, fontStyle: 'italic'}}/> 
+    } else {
+    return <Picker.Item key={item.id} value={item.name} label={item.name} /> 
+    }
+  };
 
   return (
     <View>
       <Picker
         migrate
-        migrateTextField
-        renderPicker={(selectedItem: string, itemLabel: string) => {
+        renderPicker={(selectedItem: string | undefined,  itemLabel: string | undefined) => {
           return (
             <Incubator.TextField
               preset="default"
@@ -37,22 +69,17 @@ const LocationPicker = ({
           color: Colors.black,
           placeholderTextColor: Colors.grey40,
         }}
-        title="Location"
         value={location}
-        onChange={onChangeLocation}
+        onChange={(value) => {
+          const newLoc = find(locations, (loc: Location) => loc.name === value);
+          dispatch(updateLastUsed({id: newLoc.id, name: newLoc.name, lastUsed: Date.now()}))
+          onChangeLocation(value);
+        }}
         onSearchChange={setQuery}
         topBarProps={{ title: 'Location' }}
         listProps={{
-          data: orderBy(
-            filter(locations, ({ name }) =>
-              lowerCase(name).includes(lowerCase(query)),
-            ),
-            [({ name }) => name.toLowerCase()],
-            ['asc'],
-          ),
-          renderItem: ({ item }: { item: Location }) => (
-            <Picker.Item key={item.id} value={item.name} label={item.name} />
-          ),
+          data: searchResults,
+          renderItem,
         }}
       />
       <View flex>
@@ -61,9 +88,7 @@ const LocationPicker = ({
             disabled={!location}
             size={Button.sizes.xSmall}
             label="Clear"
-            onPress={() => {
-              onChangeLocation();
-            }}
+            onPress={() => onChangeLocation('')}
           />
         </View>
       </View>
