@@ -20,28 +20,15 @@ const LocationPicker = ({
   const dispatch = useDispatch();
 
   useEffect(() => {
-    console.log("### QUERY", query.length)
-    if(query.length > 0) {
-      const newResults = orderBy(
-        filter(locations, ({ name }) =>
-          lowerCase(name).includes(lowerCase(query)),
-        ),
-        [({lastUsed}) => lastUsed, ({ name }) => name.toLowerCase()],
-        ['asc'],
-      );
-      
-      setResults(newResults);
-    } else {
-      const newResults = orderBy(
-        filter(locations, ({ lastUsed }) =>
-          lastUsed !== undefined,
-        ),
-        [({lastUsed}) => lastUsed],
-        ['asc'],
-      );
-      console.log("### NEW RESULTS", newResults)
-      setResults(newResults);
-    }
+    const newResults = orderBy(
+      filter(locations, ({ name }) =>
+        lowerCase(name).includes(lowerCase(query)),
+      ),
+      [({lastUsed}) => lastUsed !== undefined && lastUsed, ({ name }) => name.toLowerCase()],
+      ['desc', 'asc'],
+    );
+
+    setResults(newResults);
   }, [query]);
   
   const renderItem = ({ item }: { item: Location }) => {
