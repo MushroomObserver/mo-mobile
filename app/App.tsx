@@ -156,7 +156,7 @@ const App = () => {
   useEffect(() => {
     dispatch(preloadNames(undefined));
     dispatch(preloadLocations(undefined));
-  });
+  }, []);
 
   return (
     <SafeAreaProvider>
