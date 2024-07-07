@@ -366,9 +366,9 @@ const DraftWizard = ({
         timeout: 15000,
       });
       console.log('gps', gps);
-      if (gps.latitude) setLatitude(gps.latitude.toFixed(4));
-      if (gps.longitude) setLongitude(gps.longitude.toFixed(4));
-      if (gps.altitude) setAltitude(gps.altitude.toFixed(2));
+      if (gps.latitude) setLatitude(gps.latitude.toFixed(9));
+      if (gps.longitude) setLongitude(gps.longitude.toFixed(9));
+      if (gps.altitude) setAltitude(gps.altitude.toFixed(4));
     };
     // getGPS();
   }, []);
@@ -411,13 +411,13 @@ const DraftWizard = ({
       setDate(date);
     }
     if (latitude) {
-      setLatitude(latitude?.toFixed(4));
+      setLatitude(latitude?.toFixed(9));
     }
     if (latitude) {
-      setLongitude(longitude?.toFixed(4));
+      setLongitude(longitude?.toFixed(9));
     }
     if (latitude) {
-      setAltitude(altitude?.toFixed(2));
+      setAltitude(altitude?.toFixed(4));
     }
   };
 
@@ -483,7 +483,7 @@ const DraftWizard = ({
                       preset="default"
                       label="Latitude"
                       value={_.toString(latitude)}
-                      maxLength={5}
+                      maxLength={9}
                       keyboardType="numeric"
                       onChangeText={setLatitude}
                     />
@@ -493,7 +493,7 @@ const DraftWizard = ({
                       preset="default"
                       label="Longitude"
                       value={_.toString(longitude)}
-                      maxLength={5}
+                      maxLength={9}
                       keyboardType="numeric"
                       onChangeText={setLongitude}
                     />
@@ -535,10 +535,10 @@ const DraftWizard = ({
                           enableHighAccuracy: true,
                           timeout: 15000,
                         });
-                        if (gps.latitude) setLatitude(gps.latitude.toFixed(4));
+                        if (gps.latitude) setLatitude(gps.latitude.toFixed(9));
                         if (gps.longitude)
-                          setLongitude(gps.longitude.toFixed(4));
-                        if (gps.altitude) setAltitude(gps.altitude.toFixed(2));
+                          setLongitude(gps.longitude.toFixed(9));
+                        if (gps.altitude) setAltitude(gps.altitude.toFixed(4));
                         setIsLocating(false);
                       }}
                     />
