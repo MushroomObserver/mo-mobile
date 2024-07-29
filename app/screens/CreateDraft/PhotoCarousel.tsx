@@ -82,9 +82,9 @@ const Photo = ({ id, draftPhoto, onUseInfo, onRemovePhoto }: PhotoProps) => {
             onPress={() =>
               onUseInfo(
                 draftPhoto?.date,
-                latitude,
-                longitude,
-                altitude,
+                draftPhoto?.latitude,
+                draftPhoto?.longitude,
+                draftPhoto?.altitude,
               )
             }
             labelStyle={{ color: Colors.white }}
