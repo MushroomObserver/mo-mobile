@@ -366,9 +366,9 @@ const DraftWizard = ({
         timeout: 15000,
       });
       console.log('gps', gps);
-      if (gps.latitude) setLatitude(gps.latitude.toFixed(9));
-      if (gps.longitude) setLongitude(gps.longitude.toFixed(9));
-      if (gps.altitude) setAltitude(gps.altitude.toFixed(4));
+      if (gps.latitude) setLatitude(gps.latitude.toFixed(4));
+      if (gps.longitude) setLongitude(gps.longitude.toFixed(4));
+      if (gps.altitude) setAltitude(gps.altitude.toFixed(1));
     };
     // getGPS();
   }, []);
@@ -411,13 +411,13 @@ const DraftWizard = ({
       setDate(date);
     }
     if (latitude) {
-      setLatitude(latitude?.toFixed(9));
+      setLatitude(latitude?.toFixed(4));
     }
     if (latitude) {
-      setLongitude(longitude?.toFixed(9));
+      setLongitude(longitude?.toFixed(4));
     }
     if (latitude) {
-      setAltitude(altitude?.toFixed(4));
+      setAltitude(altitude?.toFixed(1));
     }
   };
 
@@ -535,10 +535,10 @@ const DraftWizard = ({
                           enableHighAccuracy: true,
                           timeout: 15000,
                         });
-                        if (gps.latitude) setLatitude(gps.latitude.toFixed(9));
+                        if (gps.latitude) setLatitude(gps.latitude.toFixed(4));
                         if (gps.longitude)
-                          setLongitude(gps.longitude.toFixed(9));
-                        if (gps.altitude) setAltitude(gps.altitude.toFixed(4));
+                          setLongitude(gps.longitude.toFixed(4));
+                        if (gps.altitude) setAltitude(gps.altitude.toFixed(1));
                         setIsLocating(false);
                       }}
                     />

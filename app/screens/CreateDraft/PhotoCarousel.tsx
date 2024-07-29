@@ -29,6 +29,13 @@ interface PhotoProps extends PropsFromRedux {
 const Photo = ({ id, draftPhoto, onUseInfo, onRemovePhoto }: PhotoProps) => {
   const navigation = useNavigation();
   const dayjs = useDayjs();
+  // const gps = draftPhoto?.exif['{GPS}'];
+  // const latitude = gps?.LatitudeRef == 'S' ? -gps?.Latitude : gps?.Latitude
+  // const longitude = gps?.LongitudeRef == 'W' ? -gps?.Longitude : gps?.Longitude
+  // const altitude = gps?.Altitude
+  // console.log(latitude)
+  // console.log(longitude)
+  console.log(draftPhoto)
 
   return (
     <View marginH-s4>
@@ -75,9 +82,9 @@ const Photo = ({ id, draftPhoto, onUseInfo, onRemovePhoto }: PhotoProps) => {
             onPress={() =>
               onUseInfo(
                 draftPhoto?.date,
-                draftPhoto?.latitude,
-                draftPhoto?.longitude,
-                draftPhoto?.altitude,
+                latitude,
+                longitude,
+                altitude,
               )
             }
             labelStyle={{ color: Colors.white }}
