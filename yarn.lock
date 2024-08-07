@@ -3821,9 +3821,9 @@ fast-levenshtein@^2.0.6:
   integrity sha512-DCXu6Ifhqcks7TZKY3Hxp3y6qphY5SJZmrWMDrKcERSOXWQdMhU9Ig/PYrzyw/ul9jOIyh0N4M0tbC5hodg8dw==
 
 fast-xml-parser@^4.0.12, fast-xml-parser@^4.2.4:
-  version "4.4.0"
-  resolved "https://registry.npmjs.org/fast-xml-parser/-/fast-xml-parser-4.4.0.tgz"
-  integrity sha512-kLY3jFlwIYwBNDojclKsNAC12sfD6NwW74QB2CoNGPvtVxjliYehVunB3HYyNi+n4Tt1dAcgwYvmKF/Z18flqg==
+  version "4.4.1"
+  resolved "https://registry.npmjs.org/fast-xml-parser/-/fast-xml-parser-4.4.1.tgz"
+  integrity sha512-xkjOecfnKGkSsOwtZ5Pz7Us/T6mrbPQrq0nh+aCO5V9nk5NLWmasAHumTKjiPJPWANe+kAZ84Jc8ooJkzZ88Sw==
   dependencies:
     strnum "^1.0.5"
 
@@ -6333,6 +6333,11 @@ react-native-device-info@^10.13.1:
   version "10.14.0"
   resolved "https://registry.npmjs.org/react-native-device-info/-/react-native-device-info-10.14.0.tgz"
   integrity sha512-9NnTGfhEU4UgQtz4p6COk2Gbqly0dpSWrJtp+dw5rNAi96KtYbaNnO5yoOHDlJ1SVIzh8+hFu3WxVbnWkFU9gA==
+
+react-native-exif@^0.5.0:
+  version "0.5.0"
+  resolved "https://registry.npmjs.org/react-native-exif/-/react-native-exif-0.5.0.tgz"
+  integrity sha512-nt8JY1QhM3EE86Wk+IusJ8J37c3ecdRETlF5g/SFKmAt3E+vnQmWwWyuLNtJux/f1zBJXhQ9Dvb43BYfu8w2yQ==
 
 react-native-flipper@^0.212.0, react-native-flipper@>=0.100.0:
   version "0.212.0"

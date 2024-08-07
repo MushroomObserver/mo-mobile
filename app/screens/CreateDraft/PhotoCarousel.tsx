@@ -2,7 +2,7 @@ import DraftPhoto from '../../components/DraftPhoto';
 import useDayjs from '../../hooks/useDayjs';
 import { selectById } from '../../store/draftImages';
 import { useNavigation } from '@react-navigation/core';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Dimensions } from 'react-native';
 import {
   Carousel,
@@ -13,6 +13,7 @@ import {
   View,
 } from 'react-native-ui-lib';
 import { connect, ConnectedProps } from 'react-redux';
+import Exif from 'react-native-exif';
 
 interface PhotoCarouselProps {
   draftPhotoIds: string[];
@@ -29,13 +30,29 @@ interface PhotoProps extends PropsFromRedux {
 const Photo = ({ id, draftPhoto, onUseInfo, onRemovePhoto }: PhotoProps) => {
   const navigation = useNavigation();
   const dayjs = useDayjs();
-  // const gps = draftPhoto?.exif['{GPS}'];
-  // const latitude = gps?.LatitudeRef == 'S' ? -gps?.Latitude : gps?.Latitude
-  // const longitude = gps?.LongitudeRef == 'W' ? -gps?.Longitude : gps?.Longitude
-  // const altitude = gps?.Altitude
-  // console.log(latitude)
-  // console.log(longitude)
-  console.log(draftPhoto)
+
+  const [latitude, setLatitude] = useState(null);
+  const [longitude, setLongitude] = useState(null);
+  const [altitude, setAltitude] = useState(null);
+
+  useEffect(() => {
+    const getLocationData = async () => {
+      const { latitude, longitude } = await Exif.getLatLong(draftPhoto?.uri);
+      setLatitude(latitude);
+      setLongitude(longitude);
+    };
+
+    getLocationData();
+  }, []);
+
+  useEffect(() => {
+    const getAltitudeData = async () => {
+      const { exif } = await Exif.getExif(draftPhoto?.uri);
+      setAltitude(exif['{GPS}']?.Altitude);
+    };
+
+    getAltitudeData();
+  }, []);
 
   return (
     <View marginH-s4>
@@ -60,12 +77,12 @@ const Photo = ({ id, draftPhoto, onUseInfo, onRemovePhoto }: PhotoProps) => {
       >
         <View flex marginR-10>
           <View row spread>
-            {draftPhoto?.latitude && draftPhoto?.longitude ? (
+            {latitude && longitude ? (
               <View>
                 <Text text100L>
-                  {draftPhoto?.latitude.toFixed(4)} {draftPhoto?.longitude.toFixed(4)}
+                  {latitude.toFixed(4)} {longitude.toFixed(4)}
                 </Text>
-                <Text text100L>{draftPhoto?.altitude?.toFixed(2)}m</Text>
+                <Text text100L>{altitude?.toFixed(2)}m</Text>
               </View>
             ) : (
               <Text text100L>No location info available.</Text>
@@ -82,9 +99,9 @@ const Photo = ({ id, draftPhoto, onUseInfo, onRemovePhoto }: PhotoProps) => {
             onPress={() =>
               onUseInfo(
                 draftPhoto?.date,
-                draftPhoto?.latitude,
-                draftPhoto?.longitude,
-                draftPhoto?.altitude,
+                latitude,
+                longitude,
+                altitude,
               )
             }
             labelStyle={{ color: Colors.white }}
