@@ -384,10 +384,16 @@ const DraftWizard = ({
   }: ImagePickerResponse) => {
     if (!didCancel && assets) {
       const newIds: string[] = [];
-      let date = undefined;
+      // The next line was in the original code, but setting a local date to
+      // undefined makes no sense to me since a correct value is maintained in
+      // the variable defined on line 101:
+      // let date = undefined;
       const draftImages = assets.map(asset => {
         let { timestamp } = asset;
+        console.log('addPhotos:timestamp: ' + timestamp);
         const newId = nanoid();
+        console.log('newId: ' + newId);
+        console.log('id: ' + id);
         newIds.push(newId);
         if (timestamp) {
           timestamp = jsCoreDateCreator(timestamp);
@@ -400,6 +406,8 @@ const DraftWizard = ({
           date: timestamp,
         };
       });
+      console.log('addPhotos:date: ' + date);
+      console.log(JSON.stringify(draftImages, null, 2));
       addDraftImages(draftImages);
       setDraftPhotoIds(concat(draftPhotoIds, newIds));
       updateDraftObservation({ id, changes: { name, draftPhotoIds, date } });
@@ -462,6 +470,7 @@ const DraftWizard = ({
               <View marginB-s4>
                 <AddPhotosButton
                   callback={addPhotos}
+                  obsId={id}
                   numPhotos={draftPhotoIds.length}
                   maxPhotos={SELECTION_LIMIT}
                 />

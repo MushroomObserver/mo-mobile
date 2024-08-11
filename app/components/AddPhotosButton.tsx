@@ -17,6 +17,7 @@ interface AddPhotosButtonProps {
 
 const AddPhotosButton = ({
   callback,
+  obsId,
   numPhotos,
   maxPhotos,
 }: AddPhotosButtonProps) => {
@@ -64,7 +65,7 @@ const AddPhotosButton = ({
         disabled={maxPhotos === numPhotos}
       />
 
-      <CameraModal toggle={toggleModal} visible={modalVisible} />
+      <CameraModal obsId={obsId} closeToggle={toggleModal} visible={modalVisible} />
     </View>
   );
 };

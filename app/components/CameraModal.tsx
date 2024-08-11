@@ -1,32 +1,71 @@
-import React from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { StyleSheet } from 'react-native';
 import { Modal, Text, TouchableOpacity, View } from 'react-native-ui-lib';
+import { Camera, useCameraDevice, useCameraPermission, useLocationPermission } from 'react-native-vision-camera';
+import Exif from 'react-native-exif';
+import { nanoid } from '@reduxjs/toolkit';
 
 type VoidFunction = () => void;
 
 interface CameraModalProps {
-  toggle: VoidFunction;
+  closeToggle: VoidFunction;
   visible: boolean;
 }
 
 export const CameraModal = ({
-  toggle,
+  closeToggle,
+  obsId,
   visible,
 }: CameraModalProps) => {
+  const device = useCameraDevice('back');
+  const { hasCameraPermission } = useCameraPermission();
+  const camera = useRef<Camera>(null);
+  const { hasLocationPermission, requestPermission } = useLocationPermission()
+
+  useEffect(() => {
+    if (hasLocationPermission == false) {
+      requestPermission();
+    }
+  }, [hasLocationPermission]);
+
+  const takePhoto = async () => {
+    console.log('takePhoto:obsId: ' + obsId)
+    if (camera.current) {
+      const photo = await camera.current.takePhoto();
+      const { exif } = await Exif.getExif(photo.path);
+      const newId = nanoid();
+      draftImage = {
+        date: exif['{GPS}']?.DateStamp.replace(/:/g, ''),
+	uri: photo.path,
+	id: newId,
+	draftObservationId: obsId,
+      };
+      console.log('takePhoto:draftImage: ' + JSON.stringify(draftImage, null, 2));
+    }
+  };
+
   return (
     <Modal
       animationType="slide"
       transparent={true}
       visible={visible}
-      onRequestClose={toggle}
+      onRequestClose={closeToggle}
     >
       <View style={styles.modalOverlay}>
-        <View style={styles.modalContent}>
-          <Text style={styles.modalText}>This is a modal dialog!</Text>
-          <TouchableOpacity style={styles.closeButton} onPress={toggle}>
-            <Text style={styles.closeButtonText}>Close</Text>
-          </TouchableOpacity>
-        </View>
+        <Camera
+          style={StyleSheet.absoluteFill}
+          device={device}
+          isActive={true}
+          photo={true}
+          ref={camera}
+          enableLocation={true}
+        />
+        <TouchableOpacity style={styles.takePhoto} onPress={takePhoto}>
+          <Text style={styles.buttonText}>Take Photo</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.closeCamera} onPress={closeToggle}>
+          <Text style={styles.buttonText}>Close</Text>
+        </TouchableOpacity>
       </View>
     </Modal>
   );
@@ -39,30 +78,26 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
-  modalContent: {
-    width: 300,
-    padding: 20,
+  takePhoto: {
+    position: 'absolute',
+    bottom: 20,
+    left: '33%',
+    transform: [{ translateX: -50 }],
     backgroundColor: 'white',
-    borderRadius: 10,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  modalText: {
-    fontSize: 18,
-    marginBottom: 15,
-    textAlign: 'center',
-  },
-  closeButton: {
-    backgroundColor: '#2196F3',
-    borderRadius: 5,
     padding: 10,
+    borderRadius: 5,
   },
-  closeButtonText: {
-    color: 'white',
-    fontSize: 16,
+  closeCamera: {
+    position: 'absolute',
+    bottom: 20,
+    left: '66%',
+    transform: [{ translateX: -50 }],
+    backgroundColor: 'white',
+    padding: 10,
+    borderRadius: 5,
+  },
+  buttonText: {
+    fontSize: 20,
+    color: 'black',
   },
 });
