@@ -65,7 +65,7 @@ const AddPhotosButton = ({
         disabled={maxPhotos === numPhotos}
       />
 
-      <CameraModal obsId={obsId} closeToggle={toggleModal} visible={modalVisible} />
+      <CameraModal obsId={obsId} closeToggle={toggleModal} visible={modalVisible} callback={callback}/>
     </View>
   );
 };

@@ -16,6 +16,7 @@ export const CameraModal = ({
   closeToggle,
   obsId,
   visible,
+  callback
 }: CameraModalProps) => {
   const device = useCameraDevice('back');
   const { hasCameraPermission } = useCameraPermission();
@@ -34,13 +35,15 @@ export const CameraModal = ({
       const photo = await camera.current.takePhoto();
       const { exif } = await Exif.getExif(photo.path);
       const newId = nanoid();
-      draftImage = {
+      const draftImage = {
         date: exif['{GPS}']?.DateStamp.replace(/:/g, ''),
-	uri: photo.path,
-	id: newId,
-	draftObservationId: obsId,
+        uri: photo.path,
+        id: newId,
+        draftObservationId: obsId,
       };
       console.log('takePhoto:draftImage: ' + JSON.stringify(draftImage, null, 2));
+      callback({didCancel: false, assets: [draftImage]})
+      closeToggle();
     }
   };
 
