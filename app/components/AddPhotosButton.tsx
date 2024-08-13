@@ -8,6 +8,7 @@ import {
 
 import { Button, Modal, Text, TouchableOpacity, View } from 'react-native-ui-lib';
 import { CameraModal } from '../components/CameraModal';
+import CameraRollModal from '../components/CameraRollModal';
 
 interface AddPhotosButtonProps {
   callback: Callback;
@@ -23,6 +24,7 @@ const AddPhotosButton = ({
 }: AddPhotosButtonProps) => {
   const { showActionSheetWithOptions } = useActionSheet();
   const [modalVisible, setModalVisible] = useState(false);
+  const [cameraRoll, setCameraRoll] = useState(false);
 
   const toggleModal = () => {
     setModalVisible(!modalVisible);
@@ -43,18 +45,19 @@ const AddPhotosButton = ({
             selectedIndex => {
               switch (selectedIndex) {
                 case 0:
-		  console.log('Before toggleModal');
-		  toggleModal();
+                  console.log('Before toggleModal');
+                  toggleModal();
                   break;
                 case 1:
-                  launchImageLibrary(
-                    {
-                      mediaType: 'photo',
-                      selectionLimit: maxPhotos - numPhotos,
-                      includeExtra: true,
-                    },
-                    callback,
-                  );
+                  // launchImageLibrary(
+                  //   {
+                  //     mediaType: 'photo',
+                  //     selectionLimit: maxPhotos - numPhotos,
+                  //     includeExtra: true,
+                  //   },
+                  //   callback,
+                  // );
+                  setCameraRoll(true);
                   break;
                 default:
                   break;
@@ -64,7 +67,7 @@ const AddPhotosButton = ({
         }
         disabled={maxPhotos === numPhotos}
       />
-
+      {cameraRoll && <CameraRollModal callback={callback} closeRoll={() => setCameraRoll(false)}/>}
       <CameraModal obsId={obsId} closeToggle={toggleModal} visible={modalVisible} callback={callback}/>
     </View>
   );
