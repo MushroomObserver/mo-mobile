@@ -15,6 +15,7 @@ interface CameraModalProps {
 export const CameraModal = ({
   closeToggle,
   obsId,
+  storePhoto,
   visible,
 }: CameraModalProps) => {
   const device = useCameraDevice('back');
@@ -41,6 +42,7 @@ export const CameraModal = ({
 	draftObservationId: obsId,
       };
       console.log('takePhoto:draftImage: ' + JSON.stringify(draftImage, null, 2));
+      storePhoto(draftImage={draftImage});
     }
   };
 

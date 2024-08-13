@@ -414,6 +414,16 @@ const DraftWizard = ({
     }
   };
 
+  const storePhoto = ({
+    draftImage
+  }) => {
+    console.log('storePhoto: ' + JSON.stringify(draftImage, null, 2));
+    addDraftImages([draftImage]);
+    const newId = draftImage.id;
+    setDraftPhotoIds(concat(draftPhotoIds, [newId]));
+    updateDraftObservation({ id, changes: { name, draftPhotoIds, date } });
+  };
+
   const useInfo = (date, latitude, longitude, altitude) => {
     if (date) {
       setDate(date);
@@ -471,6 +481,7 @@ const DraftWizard = ({
                 <AddPhotosButton
                   callback={addPhotos}
                   obsId={id}
+                  storePhoto={storePhoto}
                   numPhotos={draftPhotoIds.length}
                   maxPhotos={SELECTION_LIMIT}
                 />

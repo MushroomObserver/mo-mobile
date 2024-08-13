@@ -18,6 +18,7 @@ interface AddPhotosButtonProps {
 const AddPhotosButton = ({
   callback,
   obsId,
+  storePhoto,
   numPhotos,
   maxPhotos,
 }: AddPhotosButtonProps) => {
@@ -43,8 +44,8 @@ const AddPhotosButton = ({
             selectedIndex => {
               switch (selectedIndex) {
                 case 0:
-		  console.log('Before toggleModal');
-		  toggleModal();
+                  console.log('Before toggleModal');
+                  toggleModal();
                   break;
                 case 1:
                   launchImageLibrary(
@@ -65,7 +66,7 @@ const AddPhotosButton = ({
         disabled={maxPhotos === numPhotos}
       />
 
-      <CameraModal obsId={obsId} closeToggle={toggleModal} visible={modalVisible} />
+      <CameraModal obsId={obsId} storePhoto={storePhoto} closeToggle={toggleModal} visible={modalVisible} />
     </View>
   );
 };
