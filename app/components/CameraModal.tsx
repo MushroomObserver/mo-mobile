@@ -37,9 +37,9 @@ export const CameraModal = ({
       const newId = nanoid();
       draftImage = {
         date: exif['{GPS}']?.DateStamp.replace(/:/g, ''),
-	uri: photo.path,
-	id: newId,
-	draftObservationId: obsId,
+        uri: photo.path,
+        id: newId,
+        draftObservationId: obsId,
       };
       console.log('takePhoto:draftImage: ' + JSON.stringify(draftImage, null, 2));
       storePhoto(draftImage={draftImage});
@@ -61,6 +61,7 @@ export const CameraModal = ({
           photo={true}
           ref={camera}
           enableLocation={true}
+          photoQualityBalance="quality"
         />
         <TouchableOpacity style={styles.takePhoto} onPress={takePhoto}>
           <Text style={styles.buttonText}>Take Photo</Text>
