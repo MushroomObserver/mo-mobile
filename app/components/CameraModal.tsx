@@ -36,7 +36,7 @@ export const CameraModal = ({
       const { exif } = await Exif.getExif(photo.path);
       const newId = nanoid();
       const draftImage = {
-        date: exif['{GPS}']?.DateStamp.replace(/:/g, ''),
+        timestamp: exif['{GPS}']?.DateStamp.replace(/:/g, ''),
         uri: photo.path,
         id: newId,
         draftObservationId: obsId,
