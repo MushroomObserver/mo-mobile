@@ -384,9 +384,12 @@ const DraftWizard = ({
   }: ImagePickerResponse) => {
     if (!didCancel && assets) {
       const newIds: string[] = [];
-      // The next line was in the original code, but setting a local date to
-      // undefined makes no sense to me since a correct value is maintained in
-      // the variable defined on line 101:
+      // NJW: The next line was in the original code, but setting a local date
+      // to undefined makes no sense to me since a correct value is maintained
+      // in the variable defined on line 101.  However, the whole interplay
+      // between timestamp and date is not clear to me.  'timestamp' seems to
+      // be intended for the date of the images, but 'date' seems have to do
+      // with the date of the observation.
       // let date = undefined;
       const draftImages = assets.map(asset => {
         let { timestamp } = asset;
@@ -412,16 +415,6 @@ const DraftWizard = ({
       setDraftPhotoIds(concat(draftPhotoIds, newIds));
       updateDraftObservation({ id, changes: { name, draftPhotoIds, date } });
     }
-  };
-
-  const storePhoto = ({
-    draftImage
-  }) => {
-    console.log('storePhoto: ' + JSON.stringify(draftImage, null, 2));
-    addDraftImages([draftImage]);
-    const newId = draftImage.id;
-    setDraftPhotoIds(concat(draftPhotoIds, [newId]));
-    updateDraftObservation({ id, changes: { name, draftPhotoIds, date } });
   };
 
   const useInfo = (date, latitude, longitude, altitude) => {
@@ -481,7 +474,6 @@ const DraftWizard = ({
                 <AddPhotosButton
                   callback={addPhotos}
                   obsId={id}
-                  storePhoto={storePhoto}
                   numPhotos={draftPhotoIds.length}
                   maxPhotos={SELECTION_LIMIT}
                 />
