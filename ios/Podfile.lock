@@ -946,6 +946,10 @@ PODS:
     - React-debug
   - react-native-blob-util (0.19.9):
     - React-Core
+  - react-native-cameraroll (7.8.3):
+    - glog
+    - RCT-Folly (= 2022.05.16.00)
+    - React-Core
   - react-native-config (1.5.2):
     - react-native-config/App (= 1.5.2)
   - react-native-config/App (1.5.2):
@@ -1218,6 +1222,7 @@ DEPENDENCIES:
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - React-Mapbuffer (from `../node_modules/react-native/ReactCommon`)
   - react-native-blob-util (from `../node_modules/react-native-blob-util`)
+  - "react-native-cameraroll (from `../node_modules/@react-native-camera-roll/camera-roll`)"
   - react-native-config (from `../node_modules/react-native-config`)
   - react-native-exif (from `../node_modules/react-native-exif`)
   - react-native-flipper (from `../node_modules/react-native-flipper`)
@@ -1329,6 +1334,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon"
   react-native-blob-util:
     :path: "../node_modules/react-native-blob-util"
+  react-native-cameraroll:
+    :path: "../node_modules/@react-native-camera-roll/camera-roll"
   react-native-config:
     :path: "../node_modules/react-native-config"
   react-native-exif:
@@ -1443,6 +1450,7 @@ SPEC CHECKSUMS:
   React-logger: 0331362115f0f5b392bd7ed14636d1a3ea612479
   React-Mapbuffer: 7c35cd53a22d0be04d3f26f7881c7fb7dd230216
   react-native-blob-util: 18b510205c080a453574a7d2344d64673d0ad9af
+  react-native-cameraroll: 0fe31282894817a82b5991dd0d78dc04c5a6ed35
   react-native-config: d7d8a0c65f7fa523197879f6b777997abbfc987e
   react-native-exif: c43e7c18af8bfa133c79145671a0f036e413468e
   react-native-flipper: 9c1957af24b76493ba74f46d000a5c1d485e7731
