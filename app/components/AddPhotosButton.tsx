@@ -49,15 +49,15 @@ const AddPhotosButton = ({
                   toggleModal();
                   break;
                 case 1:
-                  // launchImageLibrary(
-                  //   {
-                  //     mediaType: 'photo',
-                  //     selectionLimit: maxPhotos - numPhotos,
-                  //     includeExtra: true,
-                  //   },
-                  //   callback,
-                  // );
-                  setCameraRoll(true);
+                  launchImageLibrary(
+                    {
+                      mediaType: 'photo',
+                      selectionLimit: maxPhotos - numPhotos,
+                      includeExtra: true,
+                    },
+                    callback,
+                  );
+                  // setCameraRoll(true);
                   break;
                 default:
                   break;
@@ -67,7 +67,6 @@ const AddPhotosButton = ({
         }
         disabled={maxPhotos === numPhotos}
       />
-      {cameraRoll && <CameraRollModal callback={callback} closeRoll={() => setCameraRoll(false)}/>}
       <CameraModal obsId={obsId} closeToggle={toggleModal} visible={modalVisible} callback={callback}/>
     </View>
   );
