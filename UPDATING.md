@@ -19,6 +19,10 @@ Create a new branch off of `main`: E.g., `git checkout -b njw-aug-2024-upgrade-c
   % rm -rf node_modules
   % npm install
 
+Note that for some changes it may be required to quit Metro and restart it with:
+
+npx react-native start --reset-cache
+
 ### On MacOS
   % cd ios
   % rm -rf Pods
@@ -72,4 +76,23 @@ the application of diffs.
 After you apply all the recommend diffs, run through the "Ensure You
 Can Do a Clean Build" process above.
 
+If you have build issues, you may need to update some specific JS package.  E.g.,
+
+  % npm uninstall react-native-reanimated
+  % npm install react-native-reanimated
+
 Be sure you add any new files to git.
+
+## Update all NPM packages
+
+This may be something you need to do as part of the React Native upgrade, but if not
+the final phase is to run:
+
+  % npm update
+
+On MacOS, you should also do:
+
+  % cd ios
+  % pod update
+
+After doing this you want to again run through the "Ensure You Can Do a Clean Build" process.
