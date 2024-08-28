@@ -62,11 +62,6 @@ const rootReducer = (state, action) => {
 
 const middlewares = [mushroomObserverApi.middleware, googleApi.middleware];
 
-if (__DEV__) {
-  const createDebugger = require('redux-flipper').default;
-  middlewares.push(createDebugger());
-}
-
 export const store = configureStore({
   reducer: persistReducer(mainPersistConfig, rootReducer),
   middleware: getDefaultMiddleware =>

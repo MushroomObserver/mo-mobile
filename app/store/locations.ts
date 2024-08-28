@@ -14,7 +14,7 @@ const slice = createSlice({
   reducers: {
     preloadLocations: (state, action) => {
       const locations = require('./location_primer.json');
-      adapter.updateMany(state, locations);
+      adapter.setAll(state, locations);
     },
     updateLastUsed: adapter.upsertOne
   },

@@ -60,32 +60,50 @@ export const CameraModal = ({
     }
   };
 
-  return (
-    <Modal
-      animationType="slide"
-      transparent={true}
-      visible={visible}
-      onRequestClose={closeToggle}
-    >
-      <View style={styles.modalOverlay}>
-        <Camera
-          style={StyleSheet.absoluteFill}
-          device={device}
-          isActive={true}
-          photo={true}
-          ref={camera}
-          enableLocation={true}
-          photoQualityBalance="quality"
-        />
-        <TouchableOpacity style={styles.takePhoto} onPress={takePhoto}>
-          <Text style={styles.buttonText}>Take Photo</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.closeCamera} onPress={closeToggle}>
-          <Text style={styles.buttonText}>Close</Text>
-        </TouchableOpacity>
-      </View>
-    </Modal>
-  );
+  if (device) {
+    return (
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={visible}
+        onRequestClose={closeToggle}
+      >
+        <View style={styles.modalOverlay}>
+          <Camera
+            style={StyleSheet.absoluteFill}
+            device={device}
+            isActive={true}
+            photo={true}
+            ref={camera}
+            enableLocation={true}
+            photoQualityBalance="quality"
+          />
+          <TouchableOpacity style={styles.takePhoto} onPress={takePhoto}>
+            <Text style={styles.buttonText}>Take Photo</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.closeCamera} onPress={closeToggle}>
+            <Text style={styles.buttonText}>Close</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
+    );
+  } else {
+    return (
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={visible}
+        onRequestClose={closeToggle}
+      >
+        <View style={styles.modalOverlay}>
+          <Text>No Camera Found</Text>
+          <TouchableOpacity style={styles.closeCamera} onPress={closeToggle}>
+            <Text style={styles.buttonText}>Close</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
+    );
+  };
 };
 
 const styles = StyleSheet.create({

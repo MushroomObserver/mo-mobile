@@ -67,6 +67,7 @@ const AddPhotosButton = ({
         }
         disabled={maxPhotos === numPhotos}
       />
+      {cameraRoll && <CameraRollModal callback={callback} closeRoll={() => setCameraRoll(false)}/>}
       <CameraModal obsId={obsId} closeToggle={toggleModal} visible={modalVisible} callback={callback}/>
     </View>
   );
