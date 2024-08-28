@@ -34,7 +34,7 @@
 	<key>NSCameraUsageDescription</key>
 	<string>MO needs photos to create observations.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string>MO uses location information to create observations.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>MO needs photos to create observations.</string>
 	<key>UIAppFonts</key>

@@ -368,7 +368,7 @@ const DraftWizard = ({
       console.log('gps', gps);
       if (gps.latitude) setLatitude(gps.latitude.toFixed(4));
       if (gps.longitude) setLongitude(gps.longitude.toFixed(4));
-      if (gps.altitude) setAltitude(gps.altitude.toFixed(2));
+      if (gps.altitude) setAltitude(gps.altitude.toFixed(1));
     };
     // getGPS();
   }, []);
@@ -384,10 +384,19 @@ const DraftWizard = ({
   }: ImagePickerResponse) => {
     if (!didCancel && assets) {
       const newIds: string[] = [];
-      let date = undefined;
+      // NJW: The next line was in the original code, but setting a local date
+      // to undefined makes no sense to me since a correct value is maintained
+      // in the variable defined on line 101.  However, the whole interplay
+      // between timestamp and date is not clear to me.  'timestamp' seems to
+      // be intended for the date of the images, but 'date' seems have to do
+      // with the date of the observation.
+      // let date = undefined;
       const draftImages = assets.map(asset => {
         let { timestamp } = asset;
+        console.log('addPhotos:timestamp: ' + timestamp);
         const newId = nanoid();
+        console.log('newId: ' + newId);
+        console.log('id: ' + id);
         newIds.push(newId);
         if (timestamp) {
           timestamp = jsCoreDateCreator(timestamp);
@@ -400,6 +409,8 @@ const DraftWizard = ({
           date: timestamp,
         };
       });
+      console.log('addPhotos:date: ' + date);
+      console.log(JSON.stringify(draftImages, null, 2));
       addDraftImages(draftImages);
       setDraftPhotoIds(concat(draftPhotoIds, newIds));
       updateDraftObservation({ id, changes: { name, draftPhotoIds, date } });
@@ -417,7 +428,7 @@ const DraftWizard = ({
       setLongitude(longitude?.toFixed(4));
     }
     if (latitude) {
-      setAltitude(altitude?.toFixed(2));
+      setAltitude(altitude?.toFixed(1));
     }
   };
 
@@ -462,6 +473,7 @@ const DraftWizard = ({
               <View marginB-s4>
                 <AddPhotosButton
                   callback={addPhotos}
+                  obsId={id}
                   numPhotos={draftPhotoIds.length}
                   maxPhotos={SELECTION_LIMIT}
                 />
@@ -483,7 +495,7 @@ const DraftWizard = ({
                       preset="default"
                       label="Latitude"
                       value={_.toString(latitude)}
-                      maxLength={5}
+                      maxLength={9}
                       keyboardType="numeric"
                       onChangeText={setLatitude}
                     />
@@ -493,7 +505,7 @@ const DraftWizard = ({
                       preset="default"
                       label="Longitude"
                       value={_.toString(longitude)}
-                      maxLength={5}
+                      maxLength={9}
                       keyboardType="numeric"
                       onChangeText={setLongitude}
                     />
@@ -538,7 +550,7 @@ const DraftWizard = ({
                         if (gps.latitude) setLatitude(gps.latitude.toFixed(4));
                         if (gps.longitude)
                           setLongitude(gps.longitude.toFixed(4));
-                        if (gps.altitude) setAltitude(gps.altitude.toFixed(2));
+                        if (gps.altitude) setAltitude(gps.altitude.toFixed(1));
                         setIsLocating(false);
                       }}
                     />

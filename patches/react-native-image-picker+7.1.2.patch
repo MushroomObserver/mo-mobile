@@ -1,0 +1,65 @@
+diff --git a/node_modules/react-native-image-picker/android/src/main/java/com/imagepicker/Utils.java b/node_modules/react-native-image-picker/android/src/main/java/com/imagepicker/Utils.java
+index 1e9078d..7ed6f29 100644
+--- a/node_modules/react-native-image-picker/android/src/main/java/com/imagepicker/Utils.java
++++ b/node_modules/react-native-image-picker/android/src/main/java/com/imagepicker/Utils.java
+@@ -491,7 +491,7 @@ public class Utils {
+     }
+ 
+     static ReadableMap getImageResponseMap(Uri uri, Uri appSpecificUri, Options options, Context context) {
+-        ImageMetadata imageMetadata = new ImageMetadata(appSpecificUri, context);
++        ImageMetadata imageMetadata = new ImageMetadata(uri, context);
+         int[] dimensions = getImageDimensions(appSpecificUri, context);
+ 
+         String fileName = getFileName(uri, context);
+diff --git a/node_modules/react-native-image-picker/ios/ImagePickerManager.mm b/node_modules/react-native-image-picker/ios/ImagePickerManager.mm
+index 93e99be..da8d721 100644
+--- a/node_modules/react-native-image-picker/ios/ImagePickerManager.mm
++++ b/node_modules/react-native-image-picker/ios/ImagePickerManager.mm
+@@ -170,6 +175,15 @@ -(NSMutableDictionary *)mapImageToAsset:(UIImage *)image data:(NSData *)data phA
+                                     maxHeight:[self.options[@"maxHeight"] floatValue]];
+     }
+ 
++    NSMutableDictionary *asset = [[NSMutableDictionary alloc] init];
++
++    NSDictionary *exifData = getExifDataFromImage(data);
++    if (exifData) {
++        asset[@"exif"] = exifData;
++    } else {
++        asset[@"exif"] = @{};
++    }
++
+     float quality = [self.options[@"quality"] floatValue];
+     if (![image isEqual:newImage] || (quality >= 0 && quality < 1)) {
+         if ([fileType isEqualToString:@"jpg"]) {
+@@ -179,7 +193,6 @@ -(NSMutableDictionary *)mapImageToAsset:(UIImage *)image data:(NSData *)data phA
+         }
+     }
+ 
+-    NSMutableDictionary *asset = [[NSMutableDictionary alloc] init];
+     asset[@"type"] = [@"image/" stringByAppendingString:fileType];
+ 
+     NSString *fileName = [self getImageFileName:fileType];
+@@ -213,6 +226,23 @@ -(NSMutableDictionary *)mapImageToAsset:(UIImage *)image data:(NSData *)data phA
+     return asset;
+ }
+ 
++NSDictionary *getExifDataFromImage(NSData *data) {
++    CGImageSourceRef imageSource = CGImageSourceCreateWithData((CFDataRef)data, NULL);
++    if (!imageSource) {
++        return nil;
++    }
++
++    NSDictionary *exifDictionary = (NSDictionary *) CFBridgingRelease(CGImageSourceCopyPropertiesAtIndex(imageSource, 0, NULL));
++    if (!exifDictionary) {
++        CFRelease(imageSource);
++        return nil;
++    }
++
++    CFRelease(imageSource);
++
++    return exifDictionary;
++}
++
+ CGImagePropertyOrientation CGImagePropertyOrientationForUIImageOrientation(UIImageOrientation uiOrientation) {
+     //code from here: https://developer.apple.com/documentation/imageio/cgimagepropertyorientation?language=objc
+     switch (uiOrientation) {
