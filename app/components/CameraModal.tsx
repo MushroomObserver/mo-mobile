@@ -45,13 +45,15 @@ export const CameraModal = ({
       const draftImage = {
         timestamp: exif['{GPS}']?.DateStamp.replace(/:/g, ''),
         // NJW: Under iOS cameraRollURI starts with 'ph://' and does not get
-	// lat/long info from react-native-exif.  However, 'photo.path' seems
-	// to work correctly.  Note that under iOS the same URI is returned if
-	// I subsequently pull the same image from the Gallery.
+        // lat/long info from react-native-exif.  However, 'photo.path' seems
+        // to work correctly.  Note that under iOS the same URI is returned if
+        // I subsequently pull the same image from the Gallery.
         uri: photo.path,
         // uri: cameraRollURI,
         id: newId,
         draftObservationId: obsId,
+        fileName: 'test.jpg',
+        type: 'image/jpg',
       };
       callback({didCancel: false, assets: [draftImage]});
       closeToggle();
