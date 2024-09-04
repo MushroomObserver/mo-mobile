@@ -242,7 +242,6 @@ const DraftWizard = ({
             postObservationResponse,
             'error.data.errors[0].details',
           );
-          console.log('new observation', newObservation);
           console.log('error', error);
           if (error) {
             setError(error);
@@ -365,7 +364,6 @@ const DraftWizard = ({
         enableHighAccuracy: true,
         timeout: 15000,
       });
-      console.log('gps', gps);
       if (gps.latitude) setLatitude(gps.latitude.toFixed(4));
       if (gps.longitude) setLongitude(gps.longitude.toFixed(4));
       if (gps.altitude) setAltitude(gps.altitude.toFixed(1));
@@ -393,15 +391,11 @@ const DraftWizard = ({
       // let date = undefined;
       const draftImages = assets.map(asset => {
         let { timestamp } = asset;
-        console.log('addPhotos:timestamp: ' + timestamp);
         const newId = nanoid();
-        console.log('newId: ' + newId);
-        console.log('id: ' + id);
         newIds.push(newId);
         if (timestamp) {
           timestamp = jsCoreDateCreator(timestamp);
         }
-        console.log(asset);
         return {
           ...asset,
           id: newId,
@@ -409,8 +403,6 @@ const DraftWizard = ({
           date: timestamp,
         };
       });
-      console.log('addPhotos:date: ' + date);
-      console.log(JSON.stringify(draftImages, null, 2));
       addDraftImages(draftImages);
       setDraftPhotoIds(concat(draftPhotoIds, newIds));
       updateDraftObservation({ id, changes: { name, draftPhotoIds, date } });

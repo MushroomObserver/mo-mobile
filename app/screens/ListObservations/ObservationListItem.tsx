@@ -24,7 +24,6 @@ const ObservationListItem = ({
 }: ObservationListItemProps) => {
   const navigation = useNavigation();
 
-  console.log(photo);
   return (
     <Drawer
       useNativeAnimations

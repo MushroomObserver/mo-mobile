@@ -31,7 +31,6 @@ export const CameraModal = ({
   }, [hasLocPerm]);
 
   const takePhoto = async () => {
-    console.log('takePhoto:obsId: ' + obsId)
     if (camera.current) {
       const photo = await camera.current.takePhoto();
       // NJW: Is the "file://" prefix needed?  Under iOS photo.path already
@@ -54,7 +53,6 @@ export const CameraModal = ({
         id: newId,
         draftObservationId: obsId,
       };
-      console.log('takePhoto:draftImage: ' + JSON.stringify(draftImage, null, 2));
       callback({didCancel: false, assets: [draftImage]});
       closeToggle();
     }

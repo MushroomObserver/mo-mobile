@@ -37,9 +37,7 @@ const Photo = ({ id, draftPhoto, onUseInfo, onRemovePhoto }: PhotoProps) => {
 
   useEffect(() => {
     const getLocationData = async () => {
-      console.log('URI: ' + draftPhoto?.uri);
       const { latitude, longitude } = await Exif.getLatLong(draftPhoto?.uri);
-      console.log('latitude: ' + latitude + ', longitude: ' + longitude)
       setLatitude(latitude);
       setLongitude(longitude);
     };
@@ -50,8 +48,6 @@ const Photo = ({ id, draftPhoto, onUseInfo, onRemovePhoto }: PhotoProps) => {
   useEffect(() => {
     const getAltitudeData = async () => {
       const { exif } = await Exif.getExif(draftPhoto?.uri);
-      console.log('getExifData:');
-      console.log(JSON.stringify(exif, null, 2));
       setAltitude(exif['{GPS}']?.Altitude);
     };
 
