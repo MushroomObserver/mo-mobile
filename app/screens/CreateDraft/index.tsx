@@ -149,6 +149,7 @@ const DraftWizard = ({
       gpsHidden,
       vote,
       notes,
+      draftPhotoIds,
     }) => {
       setIsLoading(true);
       postObservation({
@@ -336,6 +337,7 @@ const DraftWizard = ({
                   gpsHidden,
                   vote,
                   notes,
+		  draftPhotoIds,
                 })
               }
             />
@@ -647,6 +649,7 @@ const DraftWizard = ({
                   gpsHidden,
                   vote,
                   notes,
+		  draftPhotoIds,
                 })
               }
             />
