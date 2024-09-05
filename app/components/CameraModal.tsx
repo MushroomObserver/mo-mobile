@@ -52,7 +52,7 @@ export const CameraModal = ({
         // uri: cameraRollURI,
         id: newId,
         draftObservationId: obsId,
-        fileName: 'test.jpg',
+        fileName: Platform.OS === 'android' ? 'android-image.jpg' : 'ios-image.jpg',
         type: 'image/jpg',
       };
       callback({didCancel: false, assets: [draftImage]});
