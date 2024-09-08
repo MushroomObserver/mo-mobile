@@ -28,7 +28,6 @@ const AddPhotosButton = ({
 
   const toggleModal = () => {
     setModalVisible(!modalVisible);
-    console.log('modalVisible: ' + modalVisible);
   };
 
   return (
@@ -45,7 +44,6 @@ const AddPhotosButton = ({
             selectedIndex => {
               switch (selectedIndex) {
                 case 0:
-                  console.log('Before toggleModal');
                   toggleModal();
                   break;
                 case 1:

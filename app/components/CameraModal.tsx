@@ -31,7 +31,6 @@ export const CameraModal = ({
   }, [hasLocPerm]);
 
   const takePhoto = async () => {
-    console.log('takePhoto:obsId: ' + obsId)
     if (camera.current) {
       const photo = await camera.current.takePhoto();
       // NJW: Is the "file://" prefix needed?  Under iOS photo.path already
@@ -46,15 +45,16 @@ export const CameraModal = ({
       const draftImage = {
         timestamp: exif['{GPS}']?.DateStamp.replace(/:/g, ''),
         // NJW: Under iOS cameraRollURI starts with 'ph://' and does not get
-	// lat/long info from react-native-exif.  However, 'photo.path' seems
-	// to work correctly.  Note that under iOS the same URI is returned if
-	// I subsequently pull the same image from the Gallery.
+        // lat/long info from react-native-exif.  However, 'photo.path' seems
+        // to work correctly.  Note that under iOS the same URI is returned if
+        // I subsequently pull the same image from the Gallery.
         uri: photo.path,
         // uri: cameraRollURI,
         id: newId,
         draftObservationId: obsId,
+        fileName: Platform.OS === 'android' ? 'android-image.jpg' : 'ios-image.jpg',
+        type: 'image/jpg',
       };
-      console.log('takePhoto:draftImage: ' + JSON.stringify(draftImage, null, 2));
       callback({didCancel: false, assets: [draftImage]});
       closeToggle();
     }

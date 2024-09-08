@@ -72,7 +72,6 @@ const ViewObservation = ({
                     <View absF center>
                       {(() => {
                         const aspectRatio = photo.width / photo.height;
-                        console.log(photo);
                         return (
                           <Image
                             source={{ uri: getImageUri(nth(photo.files, -3)) }}
