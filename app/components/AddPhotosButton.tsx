@@ -5,6 +5,7 @@ import {
   Callback,
   launchImageLibrary,
 } from 'react-native-image-picker';
+import ImagePicker from 'react-native-image-crop-picker';
 
 import { Button, Modal, Text, TouchableOpacity, View } from 'react-native-ui-lib';
 import { CameraModal } from '../components/CameraModal';
@@ -47,6 +48,12 @@ const AddPhotosButton = ({
                   toggleModal();
                   break;
                 case 1:
+                  ImagePicker.openPicker({
+                    includeExif: true
+                  }).then(image => {
+                    console.log('Latitude: ' + image.exif.Latitude);
+                    console.log('Longitude: ' + image.exif.Longitude);
+                  });
                   launchImageLibrary(
                     {
                       mediaType: 'photo',
