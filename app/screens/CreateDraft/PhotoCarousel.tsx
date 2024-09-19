@@ -48,7 +48,20 @@ const Photo = ({ id, draftPhoto, onUseInfo, onRemovePhoto }: PhotoProps) => {
   useEffect(() => {
     const getAltitudeData = async () => {
       const { exif } = await Exif.getExif(draftPhoto?.uri);
-      setAltitude(exif['{GPS}']?.Altitude);
+      console.log('MODebug:PhotoCarousel:exif: ' + JSON.stringify(exif, null, 2));
+      let altitude = exif['{GPS}']?.Altitude;
+      if (altitude === undefined) {
+        let gpsAltitude = exif.GPSAltitude;
+	if (typeof gpsAltitude === 'string') {
+          const [numerator, denominator] = gpsAltitude.split('/').map(Number);
+          if (denominator === 0) {
+            altitude = 0;
+          } else {
+            altitude = numerator / denominator;
+          };
+        };
+      };
+      setAltitude(altitude);
     };
 
     getAltitudeData();
