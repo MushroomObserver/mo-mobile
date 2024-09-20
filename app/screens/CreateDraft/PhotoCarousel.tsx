@@ -47,25 +47,26 @@ const Photo = ({ id, draftPhoto, onUseInfo, onRemovePhoto }: PhotoProps) => {
 
   useEffect(() => {
     const getAltitudeData = async () => {
-      try {
-        const { exif } = await Exif.getExif(draftPhoto?.uri);
-        console.log('MODebug:PhotoCarousel:exif: ' + JSON.stringify(exif, null, 2));
+      if (draftPhoto) {
+        try {
+          const { exif } = await Exif.getExif(draftPhoto.uri);
 
-        // Extract altitude from exif data
-        let altitude = exif['{GPS}']?.Altitude;
+          // Extract altitude from exif data
+          let altitude = exif['{GPS}']?.Altitude;
 
-        if (altitude === undefined) {
-          const gpsAltitude = exif.GPSAltitude;
+          if (altitude === undefined) {
+            const gpsAltitude = exif.GPSAltitude;
 
-          if (typeof gpsAltitude === 'string') {
-            const [numerator, denominator] = gpsAltitude.split('/').map(Number);
-            altitude = denominator === 0 ? 0 : numerator / denominator;
-          }
+            if (typeof gpsAltitude === 'string') {
+              const [numerator, denominator] = gpsAltitude.split('/').map(Number);
+              altitude = denominator === 0 ? 0 : numerator / denominator;
+            }
+          };
+
+          setAltitude(altitude);
+        } catch (error) {
+          console.error('Error getting altitude data:', error);
         }
-
-        setAltitude(altitude);
-      } catch (error) {
-        console.error('Error getting altitude data:', error);
       }
     };
 
