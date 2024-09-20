@@ -92,18 +92,17 @@ const AddPhotosButton = ({
                   break;
                 case 1:
                   ImagePicker.openPicker({
-                    includeExif: true
-                  }).then(image => {
-                    console.log('MODebug:ImagePicker:image: ' + JSON.stringify(image, null, 2));
-                    const asset = {
+                    includeExif: true,
+                    multiple: true, // Enable multiple selection
+                  }).then(images => {
+                    const assets = images.map(image => ({
                       timestamp: calcTimestamp(image),
                       uri: calcPath(image),
                       fileName: Platform.OS === 'android' ? 'android-image.jpg' : 'ios-image.jpg',
                       type: 'image/jpg',
-                    };
-                    console.log('MODebug:ImagePicker:asset: ' + JSON.stringify(asset, null, 2));
+                    }));
 
-                    callback({didCancel: false, assets: [asset]});
+                    callback({ didCancel: false, assets });
                   });
                   break;
                 default:

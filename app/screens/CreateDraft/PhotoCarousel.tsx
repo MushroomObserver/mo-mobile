@@ -37,36 +37,42 @@ const Photo = ({ id, draftPhoto, onUseInfo, onRemovePhoto }: PhotoProps) => {
 
   useEffect(() => {
     const getLocationData = async () => {
-      const { latitude, longitude } = await Exif.getLatLong(draftPhoto?.uri);
-      setLatitude(latitude);
-      setLongitude(longitude);
+      if (!draftPhoto) return;
+
+      try {
+        const { latitude, longitude } = await Exif.getLatLong(draftPhoto.uri);
+        setLatitude(latitude);
+        setLongitude(longitude);
+      } catch (error) {
+        console.error('Error fetching location data:', error);
+      }
     };
 
     getLocationData();
-  }, []);
+  }, [draftPhoto?.uri]);
 
   useEffect(() => {
     const getAltitudeData = async () => {
-      if (draftPhoto) {
-        try {
-          const { exif } = await Exif.getExif(draftPhoto.uri);
+      if (!draftPhoto) return;
 
-          // Extract altitude from exif data
-          let altitude = exif['{GPS}']?.Altitude;
+      try {
+        const { exif } = await Exif.getExif(draftPhoto.uri);
 
-          if (altitude === undefined) {
-            const gpsAltitude = exif.GPSAltitude;
+        // Extract altitude from exif data
+        let altitude = exif['{GPS}']?.Altitude;
 
-            if (typeof gpsAltitude === 'string') {
-              const [numerator, denominator] = gpsAltitude.split('/').map(Number);
-              altitude = denominator === 0 ? 0 : numerator / denominator;
-            }
-          };
+        if (altitude === undefined) {
+          const gpsAltitude = exif.GPSAltitude;
 
-          setAltitude(altitude);
-        } catch (error) {
-          console.error('Error getting altitude data:', error);
-        }
+          if (typeof gpsAltitude === 'string') {
+            const [numerator, denominator] = gpsAltitude.split('/').map(Number);
+            altitude = denominator === 0 ? 0 : numerator / denominator;
+          }
+        };
+
+        setAltitude(altitude);
+      } catch (error) {
+        console.error('Error getting altitude data:', error);
       }
     };
 
