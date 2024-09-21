@@ -40,11 +40,16 @@ const Photo = ({ id, draftPhoto, onUseInfo, onRemovePhoto }: PhotoProps) => {
       if (!draftPhoto) return;
 
       try {
-        const { latitude, longitude } = await Exif.getLatLong(draftPhoto.uri);
-        setLatitude(latitude);
-        setLongitude(longitude);
+        if (draftPhoto.location) {
+          setLatitude(draftPhoto.location.latitude);
+          setLongitude(draftPhoto.location.longitude);
+        } else {
+          const { latitude, longitude } = await Exif.getLatLong(draftPhoto.uri);
+          setLatitude(latitude);
+          setLongitude(longitude);
+        }
       } catch (error) {
-        console.error('Error fetching location data:', error);
+        console.log(error);
       }
     };
 
@@ -56,20 +61,20 @@ const Photo = ({ id, draftPhoto, onUseInfo, onRemovePhoto }: PhotoProps) => {
       if (!draftPhoto) return;
 
       try {
-        const { exif } = await Exif.getExif(draftPhoto.uri);
-
-        // Extract altitude from exif data
-        let altitude = exif['{GPS}']?.Altitude;
-
-        if (altitude === undefined) {
-          const gpsAltitude = exif.GPSAltitude;
-
-          if (typeof gpsAltitude === 'string') {
-            const [numerator, denominator] = gpsAltitude.split('/').map(Number);
-            altitude = denominator === 0 ? 0 : numerator / denominator;
-          }
+        let altitude = 0;
+        if (draftPhoto.location) {
+          altitude = draftPhoto.location.altitude;
+        } else {
+          const { exif } = await Exif.getExif(draftPhoto.uri);
+          altitude = exif['{GPS}']?.Altitude;
+          if (altitude === undefined) {
+            const gpsAltitude = exif.GPSAltitude;
+            if (typeof gpsAltitude === 'string') {
+              const [numerator, denominator] = gpsAltitude.split('/').map(Number);
+              altitude = denominator === 0 ? 0 : numerator / denominator;
+            }
+          };
         };
-
         setAltitude(altitude);
       } catch (error) {
         console.error('Error getting altitude data:', error);

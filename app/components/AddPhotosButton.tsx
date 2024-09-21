@@ -1,6 +1,6 @@
 import { useActionSheet } from '@expo/react-native-action-sheet';
 import React, { useState } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, PermissionsAndroid, Platform } from 'react-native';
 import {
   Callback,
   launchImageLibrary,
@@ -8,13 +8,62 @@ import {
 import ImagePicker, {Image as ImagePickerImage } from 'react-native-image-crop-picker';
 
 import { Button, Modal, Text, TouchableOpacity, View } from 'react-native-ui-lib';
-import { CameraModal } from '../components/CameraModal';
-import CameraRollModal from '../components/CameraRollModal';
+import { CameraRoll } from "@react-native-camera-roll/camera-roll";
+import Geolocation from 'react-native-geolocation-service';
+
+// Function to get current latitude, longitude, and altitude
+const getCurrentLocation = async () => {
+  try {
+    if (Platform.OS === 'android') {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        {
+          title: 'Location Permission',
+          message: 'App needs access to your location.',
+          buttonPositive: 'OK',
+        }
+      );
+
+      if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
+        console.log('Location permission denied');
+        return null; // Return null if permission is denied
+      }
+    }
+
+    // Wrap Geolocation.getCurrentPosition in a Promise
+    return new Promise((resolve, reject) => {
+      Geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude, altitude } = position.coords;
+          console.log(`Latitude: ${latitude}, Longitude: ${longitude}, Altitude: ${altitude}`);
+          resolve({ latitude, longitude, altitude }); // Resolve the Promise with the location data
+        },
+        (error) => {
+          console.error('Error getting location:', error);
+          resolve(null); // Resolve with null if there is an error
+        },
+        { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+      );
+    });
+  } catch (error) {
+    console.error('Error requesting location permission:', error);
+    return null; // Return null in case of error
+  }
+};
 
 interface AddPhotosButtonProps {
   callback: Callback;
   numPhotos: number;
   maxPhotos: number;
+}
+
+function currentDate(): string {
+  const date = new Date();
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+  const day = String(date.getDate()).padStart(2, '0');
+
+  return `${year}${month}${day}`;
 }
 
 function calcTimestamp(image: ImagePickerImage): string {
@@ -54,10 +103,42 @@ function calcPath(image: ImagePickerImage): string {
 
   if (isValidURL(image.path)) {
     console.log('MODebug:calcPath:path: ' + image.path);
-    return image.path;
+    if (!image.path.startsWith('/')) return image.path;
   }
 
   return 'file://' + image.path;
+};
+
+// Helper function to handle camera capture and saving
+const handleCameraCapture = async (callback) => {
+  try {
+    // Capture image using ImagePicker
+    const image = await ImagePicker.openCamera({
+      mediaType: 'photo',
+      includeExif: true,
+      cropping: false,
+    });
+
+    // Fetch current location (latitude, longitude, altitude)
+    const location = await getCurrentLocation();
+
+    const asset = {
+      timestamp: currentDate(),
+      uri: calcPath(image),
+      fileName: Platform.OS === 'android' ? 'android-image.jpg' : 'ios-image.jpg',
+      type: 'image/jpg',
+      location: location || null, // Add location data if available, otherwise set null
+    };
+
+    // Save the image to the gallery using CameraRoll
+    await CameraRoll.save(asset.uri, { type: 'photo' });
+
+    const assets = [asset];
+    callback({ didCancel: false, assets });
+  } catch (error) {
+    console.log(error);
+    callback({ didCancel: true, assets: [] });
+  }
 };
 
 const AddPhotosButton = ({
@@ -69,10 +150,6 @@ const AddPhotosButton = ({
   const { showActionSheetWithOptions } = useActionSheet();
   const [modalVisible, setModalVisible] = useState(false);
   const [cameraRoll, setCameraRoll] = useState(false);
-
-  const toggleModal = () => {
-    setModalVisible(!modalVisible);
-  };
 
   return (
     <View style={styles.container}>
@@ -88,20 +165,8 @@ const AddPhotosButton = ({
             selectedIndex => {
               switch (selectedIndex) {
                 case 0:
-                  ImagePicker.openCamera({
-                    includeExif: true
-                  }).then(image => {
-                    console.log('Camera!');
-                    const asset = {
-                      timestamp: calcTimestamp(image),
-                      uri: calcPath(image),
-                      fileName: Platform.OS === 'android' ? 'android-image.jpg' : 'ios-image.jpg',
-                      type: 'image/jpg',
-                    };
-		    const assets = [asset];
-                    console.log('MODebug:camera', assets);
-                    callback({ didCancel: false, assets });
-                  });
+                  handleCameraCapture(callback);
+                  console.log('MODebug:end case 0');
                   break;
                 case 1:
                   ImagePicker.openPicker({
@@ -126,8 +191,6 @@ const AddPhotosButton = ({
         }
         disabled={maxPhotos === numPhotos}
       />
-      {cameraRoll && <CameraRollModal callback={callback} closeRoll={() => setCameraRoll(false)}/>}
-      <CameraModal obsId={obsId} closeToggle={toggleModal} visible={modalVisible} callback={callback}/>
     </View>
   );
 };
