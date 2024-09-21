@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { StyleSheet } from 'react-native';
 import { Modal, Text, TouchableOpacity, View } from 'react-native-ui-lib';
-import { Camera, useCameraDevice, useCameraPermission, useLocationPermission } from 'react-native-vision-camera';
+import { Camera, useCodeScanner, useCameraDevice, useCameraPermission, useLocationPermission } from 'react-native-vision-camera';
 import Exif from 'react-native-exif';
 import { CameraRoll } from "@react-native-camera-roll/camera-roll";
 import { nanoid } from '@reduxjs/toolkit';
@@ -22,7 +22,13 @@ export const CameraModal = ({
   const device = useCameraDevice('back');
   const { hasPermission: hasCamPerm, requestPermission: reqCamPerm } = useCameraPermission();
   const camera = useRef<Camera>(null);
-  const { hasPermission: hasLocPerm, requestPermission: reqLocPerm } = useLocationPermission()
+  const { hasPermission: hasLocPerm, requestPermission: reqLocPerm } = useLocationPermission();
+  const codeScanner = useCodeScanner({
+    codeTypes: ['qr'],
+    onCodeScanned: (codes) => {
+      console.log(`MODebug:Codes: ${JSON.stringify(codes, null, 2)}`)
+    }
+  });
 
   useEffect(() => {
     if (hasLocPerm == false) {
@@ -70,6 +76,7 @@ export const CameraModal = ({
       >
         <View style={styles.modalOverlay}>
           <Camera
+            codeScanner={codeScanner}
             style={StyleSheet.absoluteFill}
             device={device}
             isActive={true}
