@@ -392,6 +392,7 @@ const DraftWizard = ({
       // with the date of the observation.
       // let date = undefined;
       const draftImages = assets.map(asset => {
+        console.log('MODebug:addPhotos:asset: ' + JSON.stringify(asset, null, 2));
         let { timestamp } = asset;
         const newId = nanoid();
         newIds.push(newId);

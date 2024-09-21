@@ -88,7 +88,20 @@ const AddPhotosButton = ({
             selectedIndex => {
               switch (selectedIndex) {
                 case 0:
-                  toggleModal();
+                  ImagePicker.openCamera({
+                    includeExif: true
+                  }).then(image => {
+                    console.log('Camera!');
+                    const asset = {
+                      timestamp: calcTimestamp(image),
+                      uri: calcPath(image),
+                      fileName: Platform.OS === 'android' ? 'android-image.jpg' : 'ios-image.jpg',
+                      type: 'image/jpg',
+                    };
+		    const assets = [asset];
+                    console.log('MODebug:camera', assets);
+                    callback({ didCancel: false, assets });
+                  });
                   break;
                 case 1:
                   ImagePicker.openPicker({
