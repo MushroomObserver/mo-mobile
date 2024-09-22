@@ -34,11 +34,13 @@
 		<true/>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>MO needs photos to create observations.</string>
+	<string>Mushroom Observer needs photos to create observations.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>MO uses location information to create observations.</string>
+	<string>Mushroom Observer uses location information to create accurate mushroom observations.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Mushroom Observer uses location information to create accurate mushroom observations.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>MO needs photos to create observations.</string>
+	<string>Mushroom Observer needs photos to create observations.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>AntDesign.ttf</string>

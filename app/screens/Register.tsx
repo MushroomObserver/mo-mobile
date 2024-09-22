@@ -89,7 +89,7 @@ const Register = () => {
               ref={passwordInput}
               autoCorrect={false}
               autoCapitalize="none"
-              label="Password"
+              label="Password (5-40 characters)"
               textContentType="password"
               autoCompleteType="password"
               returnKeyType="done"

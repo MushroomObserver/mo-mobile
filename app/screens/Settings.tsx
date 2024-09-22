@@ -39,26 +39,28 @@ const Settings = () => {
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <HeaderButtons>
-          <Item
-            title={'Logout'}
-            onPress={() =>
-              Alert.alert('Logout', 'Are you sure?', [
-                {
-                  text: 'Cancel',
-                  style: 'cancel',
-                },
-                {
-                  text: 'OK',
-                  onPress: () => {
-                    persistor.purge();
-                    dispatch(logout());
+        <View style={{ marginRight: 20 }}>
+          <HeaderButtons>
+            <Item
+              title={'Logout'}
+              onPress={() =>
+                Alert.alert('Logout', 'Are you sure?', [
+                  {
+                    text: 'Cancel',
+                    style: 'cancel',
                   },
-                },
-              ])
-            }
-          />
-        </HeaderButtons>
+                  {
+                    text: 'OK',
+                    onPress: () => {
+                      persistor.purge();
+                      dispatch(logout());
+                    },
+                  },
+                ])
+              }
+            />
+          </HeaderButtons>
+        </View>
       ),
     });
   });
