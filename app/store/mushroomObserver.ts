@@ -61,7 +61,7 @@ const mushroomObserverApi = createApi({
       query: ({ email, login, password }) => {
         return {
           // url: `users?encodeQueryParams(params)`,
-          url: `users?email=${email}login=${login}password=${password}api_key=${API_KEY}&create_key=mushroom-observer-mobile&detail=high`,
+          url: `users?email=${email}&login=${login}&password=${password}&api_key=${API_KEY}&create_key=mushroom-observer-mobile&detail=high`,
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
