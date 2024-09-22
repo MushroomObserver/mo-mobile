@@ -10,6 +10,7 @@ import ImagePicker, {Image as ImagePickerImage } from 'react-native-image-crop-p
 import { Button, Modal, Text, TouchableOpacity, View } from 'react-native-ui-lib';
 import { CameraRoll } from "@react-native-camera-roll/camera-roll";
 import Geolocation from 'react-native-geolocation-service';
+import Exif from 'react-native-exif';
 
 // Function to get current latitude, longitude, and altitude
 const getCurrentLocation = async () => {
@@ -95,7 +96,9 @@ function isValidURL(str: string): boolean {
   }
 };
 
-function calcPath(image: ImagePickerImage): string {
+// Where you need to Exif data from, but not the path
+// where you should find the JPEG file (image.path)
+function calcUri(image: ImagePickerImage): string {
   if (isValidURL(image.sourceURL)) {
     console.log('MODebug:calcPath:sourceURL: ' + image.sourceURL);
     return image.sourceURL;
@@ -109,6 +112,44 @@ function calcPath(image: ImagePickerImage): string {
   return 'file://' + image.path;
 };
 
+function calcFilename(image: ImagePickerImage): string {
+  return 'mo-mobile.jpg';
+}
+
+// Function to calculate altitude from EXIF data
+async function calcAltitude(uri: string): Promise<number | null> {
+  try {
+    const { exif } = await Exif.getExif(uri);
+    let altitude = exif['{GPS}']?.Altitude;
+
+    // If no altitude is found, attempt to calculate from GPSAltitude
+    if (altitude === undefined) {
+      const gpsAltitude = exif.GPSAltitude;
+      if (typeof gpsAltitude === 'string') {
+        const [numerator, denominator] = gpsAltitude.split('/').map(Number);
+        altitude = denominator === 0 ? 0 : numerator / denominator;
+      }
+    }
+    return altitude !== undefined ? altitude : null;
+  } catch (error) {
+    console.error('Error calculating altitude:', error);
+    return null;
+  }
+}
+
+// Function to calculate location (latitude, longitude, altitude) from image
+async function calcLocation(image: ImagePickerImage): Promise<{ latitude: number, longitude: number, altitude: number | null } | null> {
+  try {
+    const uri = calcUri(image); // Assuming calcUri is a helper function to get the image URI
+    const altitude = await calcAltitude(uri);
+    const { latitude, longitude } = await Exif.getLatLong(uri);
+    return { latitude, longitude, altitude };
+  } catch (error) {
+    console.error('Error calculating location:', error);
+    return null;
+  }
+}
+
 // Helper function to handle camera capture and saving
 const handleCameraCapture = async (callback) => {
   try {
@@ -116,7 +157,6 @@ const handleCameraCapture = async (callback) => {
     const image = await ImagePicker.openCamera({
       mediaType: 'photo',
       includeExif: true,
-      cropping: false,
     });
 
     // Fetch current location (latitude, longitude, altitude)
@@ -124,8 +164,8 @@ const handleCameraCapture = async (callback) => {
 
     const asset = {
       timestamp: currentDate(),
-      uri: calcPath(image),
-      fileName: Platform.OS === 'android' ? 'android-image.jpg' : 'ios-image.jpg',
+      uri: image.path,
+      fileName: calcFilename(image),
       type: 'image/jpg',
       location: location || null, // Add location data if available, otherwise set null
     };
@@ -137,6 +177,33 @@ const handleCameraCapture = async (callback) => {
     callback({ didCancel: false, assets });
   } catch (error) {
     console.log(error);
+    callback({ didCancel: true, assets: [] });
+  }
+};
+
+const handleImagePicker = async (callback: (response: any) => void) => {
+  try {
+    const images = await ImagePicker.openPicker({
+      forceJpg: true, // Optional, for further use of image data
+      includeExif: true,
+      multiple: true, // Enable multiple selection
+    });
+
+    // Use Promise.all to ensure we wait for all location calculations
+    const assets = await Promise.all(images.map(async (image) => {
+      const location = await calcLocation(image);
+      return {
+        timestamp: calcTimestamp(image),
+        uri: image.path,
+        fileName: calcFilename(image),
+        type: 'image/jpg',
+        location,
+      };
+    }));
+
+    callback({ didCancel: false, assets });
+  } catch (error) {
+    console.error('Error picking images:', error);
     callback({ didCancel: true, assets: [] });
   }
 };
@@ -166,22 +233,9 @@ const AddPhotosButton = ({
               switch (selectedIndex) {
                 case 0:
                   handleCameraCapture(callback);
-                  console.log('MODebug:end case 0');
                   break;
                 case 1:
-                  ImagePicker.openPicker({
-                    includeExif: true,
-                    multiple: true, // Enable multiple selection
-                  }).then(images => {
-                    const assets = images.map(image => ({
-                      timestamp: calcTimestamp(image),
-                      uri: calcPath(image),
-                      fileName: Platform.OS === 'android' ? 'android-image.jpg' : 'ios-image.jpg',
-                      type: 'image/jpg',
-                    }));
-
-                    callback({ didCancel: false, assets });
-                  });
+                  handleImagePicker(callback);
                   break;
                 default:
                   break;
