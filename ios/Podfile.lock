@@ -1266,6 +1266,8 @@ PODS:
     - React-Core
   - react-native-exif (0.5.0):
     - React
+  - react-native-geolocation-service (5.3.1):
+    - React
   - react-native-image-picker (7.1.2):
     - DoubleConversion
     - glog
@@ -1749,6 +1751,7 @@ DEPENDENCIES:
   - "react-native-cameraroll (from `../node_modules/@react-native-camera-roll/camera-roll`)"
   - react-native-config (from `../node_modules/react-native-config`)
   - react-native-exif (from `../node_modules/react-native-exif`)
+  - react-native-geolocation-service (from `../node_modules/react-native-geolocation-service`)
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-sensitive-info (from `../node_modules/react-native-sensitive-info`)
@@ -1875,6 +1878,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-config"
   react-native-exif:
     :path: "../node_modules/react-native-exif"
+  react-native-geolocation-service:
+    :path: "../node_modules/react-native-geolocation-service"
   react-native-image-picker:
     :path: "../node_modules/react-native-image-picker"
   react-native-safe-area-context:
@@ -1996,6 +2001,7 @@ SPEC CHECKSUMS:
   react-native-cameraroll: b3395629565d1663b4f340c7314e7c04e88c9b3c
   react-native-config: 8f7283449bbb048902f4e764affbbf24504454af
   react-native-exif: c43e7c18af8bfa133c79145671a0f036e413468e
+  react-native-geolocation-service: 608e1da71a1ac31b4de64d9ef2815f697978c55b
   react-native-image-picker: 2fbbafdae7a7c6db9d25df2f2b1db4442d2ca2ad
   react-native-safe-area-context: ab8f4a3d8180913bd78ae75dd599c94cce3d5e9a
   react-native-sensitive-info: 400c6e3d27945e15c8cddb5b4b92233c85ee06f8
@@ -2037,8 +2043,8 @@ SPEC CHECKSUMS:
   SocketRocket: abac6f5de4d4d62d24e11868d7a2f427e0ef940d
   TOCropViewController: 80b8985ad794298fb69d3341de183f33d1853654
   VisionCamera: b69c637dc7388008c717b9566a006e5f9266fafe
-  Yoga: 2a45d7e59592db061217551fd3bbe2dd993817ae
+  Yoga: a1d7895431387402a674fd0d1c04ec85e87909b8
 
 PODFILE CHECKSUM: c8a97d779223c5d3b6615f61312fbd9a0a1532dc
 
-COCOAPODS: 1.15.2
+COCOAPODS: 1.14.3
