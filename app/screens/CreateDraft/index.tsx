@@ -269,32 +269,34 @@ const DraftWizard = ({
   useLayoutEffect(() => {
     navigation.setOptions({
       headerLeft: () => (
-        <HeaderButtons>
-          <Item
-            title="Discard"
-            onPress={() =>
-              Alert.alert(
-                'Discard Observation',
-                'Do you want to discard this observation?',
-                [
-                  {
-                    text: 'Cancel',
-                    style: 'cancel',
-                  },
-                  {
-                    text: 'Discard',
-                    onPress: () => {
-                      removeDraftObservation(id);
-                      navigation.navigate('Home', {
-                        screen: 'My Drafts',
-                      });
+        <View style={{ marginRight: 20 }}>
+          <HeaderButtons>
+            <Item
+              title="Discard"
+              onPress={() =>
+                Alert.alert(
+                  'Discard Observation',
+                  'Do you want to discard this observation?',
+                  [
+                    {
+                      text: 'Cancel',
+                      style: 'cancel',
                     },
-                  },
-                ],
-              )
-            }
-          />
-        </HeaderButtons>
+                    {
+                      text: 'Discard',
+                      onPress: () => {
+                        removeDraftObservation(id);
+                        navigation.navigate('Home', {
+                          screen: 'My Drafts',
+                        });
+                      },
+                    },
+                  ],
+                )
+              }
+            />
+          </HeaderButtons>
+        </View>
       ),
       headerRight: () => (
         <HeaderButtons>
