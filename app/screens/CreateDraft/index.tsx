@@ -636,6 +636,18 @@ const DraftWizard = ({
         )}
         <View row spread margin-s4 marginT-0>
           <Button label="Back" disabled={activeIndex === 0} onPress={back} />
+          <Button
+            label="Scan"
+            backgroundColor={Colors.blue30} // Adjust color as needed
+            onPress={() => {
+              // Action for Scan button
+              console.log('Scan button pressed');
+              // toggleModal();
+            }}
+            iconSource={() => (
+              <Icon name="qrcode" size={20} color="white" style={{ marginRight: 8 }} />
+            )}
+          />
           {(activeIndex === 2 && (
             <Button
               label="Upload"
