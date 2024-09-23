@@ -66,7 +66,7 @@ export const CameraModal = ({
             photoQualityBalance="quality"
           />
           <TouchableOpacity style={styles.sendCode} onPress={sendCode}>
-            <Text style={styles.buttonText}>Take Photo</Text>
+            <Text style={styles.buttonText}>Save Code</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.closeCamera} onPress={closeToggle}>
             <Text style={styles.buttonText}>Close</Text>

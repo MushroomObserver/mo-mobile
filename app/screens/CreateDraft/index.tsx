@@ -124,8 +124,10 @@ const DraftWizard = ({
     setModalVisible(!modalVisible);
   };
 
+  const [code, setCode] = useState(draftObservation?.code);
   const saveCode = (code) => {
     console.log('saveCode', code);
+    setCode(code);
     toggleModal();
   };
 
@@ -134,6 +136,7 @@ const DraftWizard = ({
       id,
       changes: {
         date: dayjs(date).format('YYYYMMDD'),
+        code,
         latitude,
         longitude,
         altitude,
@@ -154,6 +157,7 @@ const DraftWizard = ({
       date,
       location,
       isCollectionLocation,
+      code,
       latitude,
       longitude,
       altitude,
@@ -169,6 +173,7 @@ const DraftWizard = ({
         date: dayjs(date).format('YYYYMMDD'),
         location,
         isCollectionLocation,
+        code,
         latitude,
         longitude,
         altitude,
@@ -267,6 +272,7 @@ const DraftWizard = ({
       date,
       location,
       isCollectionLocation,
+      code,
       latitude,
       longitude,
       altitude,
@@ -318,6 +324,7 @@ const DraftWizard = ({
                 id,
                 changes: {
                   date: dayjs(date).format('YYYYMMDD'),
+                  code,
                   latitude,
                   longitude,
                   altitude,
@@ -344,6 +351,7 @@ const DraftWizard = ({
                   date,
                   location,
                   isCollectionLocation,
+                  code,
                   latitude,
                   longitude,
                   altitude,
@@ -363,6 +371,7 @@ const DraftWizard = ({
     name,
     date,
     location,
+    code,
     latitude,
     longitude,
     altitude,
@@ -669,6 +678,7 @@ const DraftWizard = ({
                   date,
                   location,
                   isCollectionLocation,
+                  code,
                   latitude,
                   longitude,
                   altitude,
