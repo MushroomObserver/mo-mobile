@@ -125,7 +125,9 @@ const DraftWizard = ({
   };
 
   const [code, setCode] = useState(draftObservation?.code);
-  const saveCode = (code) => {
+
+  const saveCode = (raw_code) => {
+    const code = raw_code.substring(raw_code.lastIndexOf('/') + 1);
     console.log('saveCode', code);
     setCode(code);
     toggleModal();
@@ -496,16 +498,29 @@ const DraftWizard = ({
                 />
               </View>
               <FormGroup>
-                <Text marginB-s2 text80 textDefault>
-                  Date
-                </Text>
-                <DateTimePicker
-                  value={dayjs(date).toDate()}
-                  dateFormat="YYYY-MM-DD"
-                  mode="date"
-                  themeVariant="light"
-                  onChange={setDate}
-                />
+                <View spread row>
+                  <View flex>
+                    <Text marginB-s2 text80 textDefault>
+                      Date
+                    </Text>
+                    <DateTimePicker
+                      value={dayjs(date).toDate()}
+                      dateFormat="YYYY-MM-DD"
+                      mode="date"
+                      themeVariant="light"
+                      onChange={setDate}
+                    />
+                  </View>
+                  <View flex>
+                    <TextField
+                      preset="default"
+                      label="Code"
+                      value={_.toString(code)}
+                      maxLength={16}
+                      onChangeText={setCode}
+                    />
+                  </View>
+                </View>
                 <View spread row>
                   <View flex>
                     <TextField
