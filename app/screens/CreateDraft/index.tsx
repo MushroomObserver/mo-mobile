@@ -7,6 +7,7 @@ import { FormGroup } from '../../components/base/FormGroup';
 import { TextField } from '../../components/base/TextField';
 import HeaderButtons from '../../components/header/HeaderButtons';
 import OverflowMenu from '../../components/header/OverflowMenu';
+import { CameraModal } from '../../components/CameraModal';
 import { useKey } from '../../hooks/useAuth';
 import useDayjs from '../../hooks/useDayjs';
 import {
@@ -117,6 +118,11 @@ const DraftWizard = ({
   const [postImage, postImageResult] = usePostImageMutation();
 
   const [isLoading, setIsLoading] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const toggleModal = () => {
+    setModalVisible(!modalVisible);
+  };
 
   useEffect(() => {
     updateDraftObservation({
@@ -339,7 +345,7 @@ const DraftWizard = ({
                   gpsHidden,
                   vote,
                   notes,
-		  draftPhotoIds,
+                  draftPhotoIds,
                 })
               }
             />
@@ -642,7 +648,7 @@ const DraftWizard = ({
             onPress={() => {
               // Action for Scan button
               console.log('Scan button pressed');
-              // toggleModal();
+              toggleModal();
             }}
             iconSource={() => (
               <Icon name="qrcode" size={20} color="white" style={{ marginRight: 8 }} />
@@ -664,7 +670,7 @@ const DraftWizard = ({
                   gpsHidden,
                   vote,
                   notes,
-		  draftPhotoIds,
+                  draftPhotoIds,
                 })
               }
             />
@@ -681,6 +687,7 @@ const DraftWizard = ({
           overlay
         />
       )}
+      <CameraModal obsId={id} closeToggle={toggleModal} visible={modalVisible}/>
     </View>
   );
 };
