@@ -10,11 +10,13 @@ type VoidFunction = () => void;
 
 interface CameraModalProps {
   closeToggle: VoidFunction;
+  saveCode: VoidFunction;
   visible: boolean;
 }
 
 export const CameraModal = ({
   closeToggle,
+  saveCode,
   obsId,
   visible,
   callback
@@ -23,48 +25,25 @@ export const CameraModal = ({
   const { hasPermission: hasCamPerm, requestPermission: reqCamPerm } = useCameraPermission();
   const camera = useRef<Camera>(null);
   const { hasPermission: hasLocPerm, requestPermission: reqLocPerm } = useLocationPermission();
+  const [lastCode, setLastCode] = useState(false);
+
   const codeScanner = useCodeScanner({
     codeTypes: ['qr'],
     onCodeScanned: (codes) => {
+      setLastCode('Hello codeScanner!');
       console.log(`MODebug:Codes: ${JSON.stringify(codes, null, 2)}`)
     }
   });
+
+  const sendCode = async () => {
+    saveCode(lastCode);
+  };
 
   useEffect(() => {
     if (hasLocPerm == false) {
       reqLocPerm();
     }
   }, [hasLocPerm]);
-
-  const takePhoto = async () => {
-    if (camera.current) {
-      const photo = await camera.current.takePhoto();
-      // NJW: Is the "file://" prefix needed?  Under iOS photo.path already
-      // starts with "file://"
-      const cameraRollURI = await CameraRoll.save(`file://${photo.path}`, {
-        type: 'photo',
-      })
-      console.log("#### photo.path:", photo.path);
-      console.log("#### CAM ROLL URI:", cameraRollURI);
-      const { exif } = await Exif.getExif(photo.path);
-      const newId = nanoid();
-      const draftImage = {
-        timestamp: exif['{GPS}']?.DateStamp.replace(/:/g, ''),
-        // NJW: Under iOS cameraRollURI starts with 'ph://' and does not get
-        // lat/long info from react-native-exif.  However, 'photo.path' seems
-        // to work correctly.  Note that under iOS the same URI is returned if
-        // I subsequently pull the same image from the Gallery.
-        uri: photo.path,
-        // uri: cameraRollURI,
-        id: newId,
-        draftObservationId: obsId,
-        fileName: Platform.OS === 'android' ? 'android-image.jpg' : 'ios-image.jpg',
-        type: 'image/jpg',
-      };
-      callback({didCancel: false, assets: [draftImage]});
-      closeToggle();
-    }
-  };
 
   if (device) {
     return (
@@ -85,7 +64,7 @@ export const CameraModal = ({
             enableLocation={true}
             photoQualityBalance="quality"
           />
-          <TouchableOpacity style={styles.takePhoto} onPress={takePhoto}>
+          <TouchableOpacity style={styles.sendCode} onPress={sendCode}>
             <Text style={styles.buttonText}>Take Photo</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.closeCamera} onPress={closeToggle}>
@@ -120,7 +99,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
-  takePhoto: {
+  sendCode: {
     position: 'absolute',
     bottom: 20,
     left: '33%',

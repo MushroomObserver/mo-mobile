@@ -124,6 +124,11 @@ const DraftWizard = ({
     setModalVisible(!modalVisible);
   };
 
+  const saveCode = (code) => {
+    console.log('saveCode', code);
+    toggleModal();
+  };
+
   useEffect(() => {
     updateDraftObservation({
       id,
@@ -687,7 +692,7 @@ const DraftWizard = ({
           overlay
         />
       )}
-      <CameraModal obsId={id} closeToggle={toggleModal} visible={modalVisible}/>
+      <CameraModal obsId={id} closeToggle={toggleModal} saveCode={saveCode} visible={modalVisible}/>
     </View>
   );
 };
