@@ -30,8 +30,9 @@ export const CameraModal = ({
   const codeScanner = useCodeScanner({
     codeTypes: ['qr'],
     onCodeScanned: (codes) => {
-      setLastCode('Hello codeScanner!');
-      console.log(`MODebug:Codes: ${JSON.stringify(codes, null, 2)}`)
+      codes.forEach((code) => {
+        setLastCode(code['value']);
+      });
     }
   });
 
