@@ -117,7 +117,7 @@ const ViewObservation = ({
                   </Text>
                   <Text text90R grey10>
                     {observation?.latitude} {observation?.longitude}{' '}
-                    {observation?.altitude}m
+                    {observation?.altitude ? `#${observation?.altitude}m` : ''}
                   </Text>
                   <View row centerV>
                     <Icon
@@ -140,6 +140,12 @@ const ViewObservation = ({
                   </Text>
                 </View>
               </View>
+              <Text text90M grey10>
+                Field Slip Code
+              </Text>
+              <Text text90R grey10>
+                {observation.code?}
+              </Text>
               <Text text90M grey10>
                 Notes
               </Text>
