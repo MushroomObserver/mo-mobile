@@ -98,7 +98,7 @@ const Photo = ({ id, draftPhoto, onUseInfo, onRemovePhoto }: PhotoProps) => {
                 <Text text100L>
                   {latitude.toFixed(4)} {longitude.toFixed(4)}
                 </Text>
-                <Text text100L>{altitude?.toFixed(2)}m</Text>
+                <Text text100L>{altitude ? `${altitude.toFixed(2)}m` : ''}</Text>
               </View>
             ) : (
               <Text text100L>No location info available.</Text>
