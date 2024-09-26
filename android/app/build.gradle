@@ -89,7 +89,7 @@ android {
         applicationId "org.mushroomobserver.mobile"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 111
+        versionCode 10101
         versionName "1.1.1"
     }
     signingConfigs {
