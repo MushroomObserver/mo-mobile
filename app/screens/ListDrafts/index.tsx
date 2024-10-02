@@ -21,10 +21,19 @@ import { useKey } from '../../hooks/useAuth';
 interface DraftListProps extends PropsFromRedux {}
 
 import { store } from '../../store'; // Path to your Redux store
+import {
+  usePostImageMutation,
+  usePostObservationMutation,
+} from '../../store/mushroomObserver';
 
 const getDraftObservationById = (id: string) => {
   const state = store.getState();
   return selectById(state, id);
+};
+
+const getDraftImagesForObservationId = (obsId: string) => {
+  const state = store.getState();
+  return selectByDraftObservationId(state, obsId);
 };
 
 const DraftList = ({
@@ -36,6 +45,8 @@ const DraftList = ({
   const apiKey = useKey();
 
   const [isLoading, setIsLoading] = useState(false);
+  const [postObservation, postObservationResult] = usePostObservationMutation();
+  const [postImage, postImageResult] = usePostImageMutation();
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -75,9 +86,7 @@ const DraftList = ({
         draftPhotoIds,
       } = draftObservation;
 
-      const imagesToUpload = useSelector(state =>
-        selectByDraftObservationId(state, draftObservationId)
-      );
+      const imagesToUpload = getDraftImagesForObservationId(draftObservationId);
 
       postObservation({
         api_key: apiKey,
