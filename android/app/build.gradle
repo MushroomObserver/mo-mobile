@@ -86,7 +86,7 @@ android {
 
     namespace "org.mushroomobserver"
     defaultConfig {
-        applicationId "org.mushroomobserver.mobile"
+        applicationId "org.mushroomobserver"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 10101
