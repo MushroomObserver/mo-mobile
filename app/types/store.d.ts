@@ -72,6 +72,7 @@ export interface DraftObservation {
   location?: string;
   vote?: number;
   notes?: string;
+  code?: string;
   latitude?: number;
   longitude?: number;
   altitude?: number;

@@ -7,6 +7,7 @@ import { FormGroup } from '../../components/base/FormGroup';
 import { TextField } from '../../components/base/TextField';
 import HeaderButtons from '../../components/header/HeaderButtons';
 import OverflowMenu from '../../components/header/OverflowMenu';
+import { CameraModal } from '../../components/CameraModal';
 import { useKey } from '../../hooks/useAuth';
 import useDayjs from '../../hooks/useDayjs';
 import {
@@ -117,12 +118,27 @@ const DraftWizard = ({
   const [postImage, postImageResult] = usePostImageMutation();
 
   const [isLoading, setIsLoading] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const toggleModal = () => {
+    setModalVisible(!modalVisible);
+  };
+
+  const [code, setCode] = useState(draftObservation?.code);
+
+  const saveCode = (raw_code) => {
+    const code = raw_code.substring(raw_code.lastIndexOf('/') + 1);
+    console.log('saveCode', code);
+    setCode(code);
+    toggleModal();
+  };
 
   useEffect(() => {
     updateDraftObservation({
       id,
       changes: {
         date: dayjs(date).format('YYYYMMDD'),
+        code,
         latitude,
         longitude,
         altitude,
@@ -143,6 +159,7 @@ const DraftWizard = ({
       date,
       location,
       isCollectionLocation,
+      code,
       latitude,
       longitude,
       altitude,
@@ -158,6 +175,7 @@ const DraftWizard = ({
         date: dayjs(date).format('YYYYMMDD'),
         location,
         isCollectionLocation,
+        code,
         latitude,
         longitude,
         altitude,
@@ -256,6 +274,7 @@ const DraftWizard = ({
       date,
       location,
       isCollectionLocation,
+      code,
       latitude,
       longitude,
       altitude,
@@ -307,6 +326,7 @@ const DraftWizard = ({
                 id,
                 changes: {
                   date: dayjs(date).format('YYYYMMDD'),
+                  code,
                   latitude,
                   longitude,
                   altitude,
@@ -333,13 +353,14 @@ const DraftWizard = ({
                   date,
                   location,
                   isCollectionLocation,
+                  code,
                   latitude,
                   longitude,
                   altitude,
                   gpsHidden,
                   vote,
                   notes,
-		  draftPhotoIds,
+                  draftPhotoIds,
                 })
               }
             />
@@ -352,6 +373,7 @@ const DraftWizard = ({
     name,
     date,
     location,
+    code,
     latitude,
     longitude,
     altitude,
@@ -476,16 +498,29 @@ const DraftWizard = ({
                 />
               </View>
               <FormGroup>
-                <Text marginB-s2 text80 textDefault>
-                  Date
-                </Text>
-                <DateTimePicker
-                  value={dayjs(date).toDate()}
-                  dateFormat="YYYY-MM-DD"
-                  mode="date"
-                  themeVariant="light"
-                  onChange={setDate}
-                />
+                <View spread row>
+                  <View flex>
+                    <Text marginB-s2 text80 textDefault>
+                      Date
+                    </Text>
+                    <DateTimePicker
+                      value={dayjs(date).toDate()}
+                      dateFormat="YYYY-MM-DD"
+                      mode="date"
+                      themeVariant="light"
+                      onChange={setDate}
+                    />
+                  </View>
+                  <View flex>
+                    <TextField
+                      preset="default"
+                      label="Code"
+                      value={_.toString(code)}
+                      maxLength={16}
+                      onChangeText={setCode}
+                    />
+                  </View>
+                </View>
                 <View spread row>
                   <View flex>
                     <TextField
@@ -636,6 +671,18 @@ const DraftWizard = ({
         )}
         <View row spread margin-s4 marginT-0>
           <Button label="Back" disabled={activeIndex === 0} onPress={back} />
+          <Button
+            label="Scan"
+            backgroundColor={Colors.blue30} // Adjust color as needed
+            onPress={() => {
+              // Action for Scan button
+              console.log('Scan button pressed');
+              toggleModal();
+            }}
+            iconSource={() => (
+              <Icon name="qrcode" size={20} color="white" style={{ marginRight: 8 }} />
+            )}
+          />
           {(activeIndex === 2 && (
             <Button
               label="Upload"
@@ -646,13 +693,14 @@ const DraftWizard = ({
                   date,
                   location,
                   isCollectionLocation,
+                  code,
                   latitude,
                   longitude,
                   altitude,
                   gpsHidden,
                   vote,
                   notes,
-		  draftPhotoIds,
+                  draftPhotoIds,
                 })
               }
             />
@@ -669,6 +717,7 @@ const DraftWizard = ({
           overlay
         />
       )}
+      <CameraModal obsId={id} closeToggle={toggleModal} saveCode={saveCode} visible={modalVisible}/>
     </View>
   );
 };
