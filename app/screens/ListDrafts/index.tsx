@@ -1,10 +1,19 @@
 import useDayjs from '../../hooks/useDayjs';
 import {
+  addDraftObservation as addDraftObservationAction,
+  removeDraftObservation as removeDraftObservationAction,
   selectIds,
   selectById,
-  addDraftObservation as addDraftObservationAction,
 } from '../../store/draftObservations';
-import { selectByDraftObservationId } from '../../store/draftImages';
+
+import {
+  addObservation as addObservationAction,
+  updateObservation as updateObservationAction,
+} from '../../store/observations';
+import {
+  removeDraftImage as removeDraftImageAction,
+  selectByDraftObservationId,
+} from '../../store/draftImages';
 import DraftListEmptyView from './DraftListEmptyView';
 import DraftListItem from './DraftListItem';
 import { useNavigation } from '@react-navigation/core';
@@ -25,6 +34,12 @@ import {
   usePostImageMutation,
   usePostObservationMutation,
 } from '../../store/mushroomObserver';
+import _, { get } from 'lodash';
+import {
+  setError as setErrorAction,
+  setInfo as setInfoAction
+} from '../../store/flash';
+import { addImage as addImageAction } from '../../store/images';
 
 const getDraftObservationById = (id: string) => {
   const state = store.getState();
@@ -38,7 +53,14 @@ const getDraftImagesForObservationId = (obsId: string) => {
 
 const DraftList = ({
   draftObservationIds,
+  removeDraftObservation,
+  addObservation,
+  updateObservation,
   addDraftObservation,
+  addImage,
+  removeDraftImage,
+  setInfo,
+  setError,
 }: DraftListProps) => {
   const navigation = useNavigation();
   const dayjs = useDayjs();
@@ -87,6 +109,7 @@ const DraftList = ({
       } = draftObservation;
 
       const imagesToUpload = getDraftImagesForObservationId(draftObservationId);
+      console.log('uploadObservation:imageToUpload.length', imagesToUpload.length);
 
       postObservation({
         api_key: apiKey,
@@ -105,6 +128,7 @@ const DraftList = ({
         .then(postObservationResponse => {
           const newObservation = get(postObservationResponse, 'data.results[0]');
           if (newObservation) {
+            console.log('uploadObservation obs created', draftObservationId);
             setInfo('Observation created');
             addObservation(newObservation);
             removeDraftObservation(draftObservationId);
@@ -131,6 +155,8 @@ const DraftList = ({
                     .then(imageUploadResponse => {
                       const newImage = get(imageUploadResponse, 'data.results[0]');
                       if (newImage) {
+                        console.log('uploadObservation image created',
+			            image.id);
                         setInfo('Image uploaded');
                         addImage(newImage);
                         removeDraftImage(image.id);
@@ -166,7 +192,6 @@ const DraftList = ({
           }
 
           const error = get(postObservationResponse, 'error.data.errors[0].details');
-          console.log('error', error);
           if (error) {
             setError(error);
           }
@@ -242,6 +267,13 @@ const mapStateToProps = (state: any, ownProps: any) => ({
 
 const mapDispatchToProps = {
   addDraftObservation: addDraftObservationAction,
+  removeDraftObservation: removeDraftObservationAction,
+  addObservation: addObservationAction,
+  updateObservation: updateObservationAction,
+  addImage: addImageAction,
+  removeDraftImage: removeDraftImageAction,
+  setInfo: setInfoAction,
+  setError: setErrorAction,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
