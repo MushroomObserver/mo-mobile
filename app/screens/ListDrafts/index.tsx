@@ -18,11 +18,12 @@ import DraftListEmptyView from './DraftListEmptyView';
 import DraftListItem from './DraftListItem';
 import { useNavigation } from '@react-navigation/core';
 import { nanoid } from '@reduxjs/toolkit';
-import React, { useCallback, useLayoutEffect, useState } from 'react';
+import React, { useCallback, useLayoutEffect, useEffect, useState } from 'react';
 import { FlatList, StyleSheet } from 'react-native';
 import { FloatingButton, Spacings, View, LoaderScreen, Colors } from 'react-native-ui-lib';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { connect, ConnectedProps, useSelector } from 'react-redux';
+import { connect, ConnectedProps, useSelector, useDispatch } from 'react-redux';
+import { setLoading, setLoadingIfNotAlreadyLoading } from '../../store/loadingSlice';
 import HeaderButtons from '../../components/header/HeaderButtons';
 import { Item } from 'react-navigation-header-buttons';
 import { useKey } from '../../hooks/useAuth';
@@ -63,12 +64,16 @@ const DraftList = ({
   setError,
 }: DraftListProps) => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
   const dayjs = useDayjs();
   const apiKey = useKey();
 
-  const [isLoading, setIsLoading] = useState(false);
   const [postObservation, postObservationResult] = usePostObservationMutation();
   const [postImage, postImageResult] = usePostImageMutation();
+
+  const isLoading = useSelector((state) => {
+    return state.loading.isLoading;
+  });
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -77,13 +82,14 @@ const DraftList = ({
           <HeaderButtons>
             <Item
               title={'Upload All'}
-              onPress={() => uploadAllObservations(draftObservationIds)}
+              onPress={() => !store.getState().loading.isLoading && uploadAllObservations(draftObservationIds)}
+              disabled={isLoading}
             />
           </HeaderButtons>
         </View>
       ),
     });
-  });
+  }, [navigation, draftObservationIds, isLoading]);
 
   const uploadObservation = useCallback(
     (draftObservationId: string) => {
@@ -201,15 +207,30 @@ const DraftList = ({
     [apiKey], // Add other necessary dependencies
   );
 
+  // const uploadAllObservations = useCallback(
+  //   async (draftObservationIds) => {
+  //     if (isLoading) return;
+  //     dispatch(setLoading(true));
+  //     try {
+  //       await Promise.all(draftObservationIds.map(id => uploadObservation(id)));
+  //     } finally {
+  //       dispatch(setLoading(false));
+  //     }
+  //   },
+  //   [dispatch, isLoading, uploadObservation]
+  // );
+
   const uploadAllObservations = useCallback(
     (draftObservationIds) => {
-      setIsLoading(true);
+      dispatch(setLoadingIfNotAlreadyLoading());
+      if (store.getState().loading.isloading) return;
       draftObservationIds.forEach((id) => {
-        console.log('uploadAllObservations', id);
+        now = new Date()
+        console.log(now.toLocaleString(), String(now.getMilliseconds()).padStart(3, '0'), 'uploadAllObservations', id);
         uploadObservation(id);
       });
-      setIsLoading(false);
-    }, [uploadObservation]
+      dispatch(setLoading(false));
+    }, [isLoading, uploadObservation]
   );
 
   return (
@@ -243,7 +264,7 @@ const DraftList = ({
         }}
         hideBackgroundOverlay
       />
-      {isLoading && (
+      { isLoading && (
         <LoaderScreen
           color={Colors.blue30}
           backgroundColor={Colors.grey50}

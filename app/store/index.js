@@ -8,6 +8,7 @@ import locations from './locations';
 import mushroomObserverApi from './mushroomObserver';
 import names from './names';
 import observations from './observations';
+import loadingReducer from './loadingSlice';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { setupListeners } from '@reduxjs/toolkit/query';
 import {
@@ -44,6 +45,7 @@ const mainReducer = combineReducers({
   [mushroomObserverApi.reducerPath]: mushroomObserverApi.reducer,
   [googleApi.reducerPath]: googleApi.reducer,
   auth: persistReducer(authPersistConfig, auth),
+  loading: loadingReducer,
   draftObservations,
   observations,
   draftImages,
