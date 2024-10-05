@@ -77,13 +77,14 @@ const DraftList = ({
           <HeaderButtons>
             <Item
               title={'Upload All'}
-              onPress={() => uploadAllObservations(draftObservationIds)}
+              onPress={() => !isLoading && uploadAllObservations(draftObservationIds)}
+              disabled={isLoading}
             />
           </HeaderButtons>
         </View>
       ),
     });
-  });
+  }, [navigation, draftObservationIds, isLoading]);
 
   const uploadObservation = useCallback(
     (draftObservationId: string) => {
@@ -203,13 +204,14 @@ const DraftList = ({
 
   const uploadAllObservations = useCallback(
     (draftObservationIds) => {
+      // There is a race condition here if the user spams 'Upload All'
+      if (isLoading) return;
       setIsLoading(true);
       draftObservationIds.forEach((id) => {
-        console.log('uploadAllObservations', id);
         uploadObservation(id);
       });
       setIsLoading(false);
-    }, [uploadObservation]
+    }, [isLoading, uploadObservation]
   );
 
   return (
@@ -243,7 +245,7 @@ const DraftList = ({
         }}
         hideBackgroundOverlay
       />
-      {isLoading && (
+      { isLoading && (
         <LoaderScreen
           color={Colors.blue30}
           backgroundColor={Colors.grey50}
