@@ -51,6 +51,12 @@ const getDraftImagesForObservationId = (obsId: string) => {
   return selectByDraftObservationId(state, obsId);
 };
 
+// const stateReport = () => {
+//   const state = store.getState();
+//   console.log('LD:name count:', state.names.ids.length);
+//   console.log('LD:location count:', state.locations.ids.length);
+// };
+
 const DraftList = ({
   draftObservationIds,
   removeDraftObservation,
@@ -69,6 +75,7 @@ const DraftList = ({
   const [isLoading, setIsLoading] = useState(false);
   const [postObservation, postObservationResult] = usePostObservationMutation();
   const [postImage, postImageResult] = usePostImageMutation();
+  // stateReport();
 
   useLayoutEffect(() => {
     navigation.setOptions({

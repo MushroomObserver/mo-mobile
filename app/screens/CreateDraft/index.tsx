@@ -63,8 +63,11 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { HiddenItem, Item } from 'react-navigation-header-buttons';
 import { withForwardedNavigationParams } from 'react-navigation-props-mapper';
-import { connect, ConnectedProps } from 'react-redux';
+import { connect, ConnectedProps, useDispatch } from 'react-redux';
 import { act } from 'react-test-renderer';
+import { preloadLocations } from '../../store/locations';
+import { preloadNames } from '../../store/names';
+import { store } from '../../store'; // Path to your Redux store
 
 interface DraftWizardProps extends PropsFromRedux {
   id: string;
@@ -133,6 +136,13 @@ const DraftWizard = ({
     }
     toggleModal();
   };
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const state = store.getState();
+    if (state.locations.ids.length === 0) dispatch(preloadLocations());
+    if (state.names.ids.length === 0) dispatch(preloadNames());
+  }, [activeIndex, dispatch]);
 
   useEffect(() => {
     updateDraftObservation({
