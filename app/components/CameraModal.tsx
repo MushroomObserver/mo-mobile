@@ -41,6 +41,17 @@ export const CameraModal = ({
   };
 
   useEffect(() => {
+    // Request camera permission on component mount
+    const getPermission = async () => {
+      const status = await reqCamPerm();
+      if (status === 'denied') {
+        Alert.alert('Permission Denied', 'Camera access is required to use this feature.');
+      }
+    };
+    getPermission();
+  }, [reqCamPerm]);
+
+  useEffect(() => {
     if (hasLocPerm == false) {
       reqLocPerm();
     }
