@@ -110,7 +110,6 @@ const DraftList = ({
       } = draftObservation;
 
       const imagesToUpload = getDraftImagesForObservationId(draftObservationId);
-      console.log('uploadObservation:imageToUpload.length', imagesToUpload.length);
 
       postObservation({
         api_key: apiKey,
@@ -129,7 +128,6 @@ const DraftList = ({
         .then(postObservationResponse => {
           const newObservation = get(postObservationResponse, 'data.results[0]');
           if (newObservation) {
-            console.log('uploadObservation obs created', draftObservationId);
             setInfo('Observation created');
             addObservation(newObservation);
             removeDraftObservation(draftObservationId);
@@ -156,8 +154,6 @@ const DraftList = ({
                     .then(imageUploadResponse => {
                       const newImage = get(imageUploadResponse, 'data.results[0]');
                       if (newImage) {
-                        console.log('uploadObservation image created',
-			            image.id);
                         setInfo('Image uploaded');
                         addImage(newImage);
                         removeDraftImage(image.id);
