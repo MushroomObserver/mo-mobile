@@ -127,9 +127,10 @@ const DraftWizard = ({
   const [code, setCode] = useState(draftObservation?.code);
 
   const saveCode = (raw_code) => {
-    const code = raw_code.substring(raw_code.lastIndexOf('/') + 1);
-    console.log('saveCode', code);
-    setCode(code);
+    if (raw_code) {
+      const code = raw_code.substring(raw_code.lastIndexOf('/') + 1);
+      setCode(code);
+    }
     toggleModal();
   };
 
@@ -261,7 +262,6 @@ const DraftWizard = ({
             postObservationResponse,
             'error.data.errors[0].details',
           );
-          console.log('error', error);
           if (error) {
             setError(error);
           }
@@ -416,7 +416,6 @@ const DraftWizard = ({
       // with the date of the observation.
       // let date = undefined;
       const draftImages = assets.map(asset => {
-        console.log('MODebug:addPhotos:asset: ' + JSON.stringify(asset, null, 2));
         let { timestamp } = asset;
         const newId = nanoid();
         newIds.push(newId);
@@ -675,8 +674,6 @@ const DraftWizard = ({
             label="Scan"
             backgroundColor={Colors.blue30} // Adjust color as needed
             onPress={() => {
-              // Action for Scan button
-              console.log('Scan button pressed');
               toggleModal();
             }}
             iconSource={() => (
