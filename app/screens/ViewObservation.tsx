@@ -188,7 +188,7 @@ const ViewObservation = ({
 
 const mapStateToProps = (state: any, ownProps: ViewObservationProps) => {
   const observation = selectObservationById(state, ownProps.id);
-  const photos = observation.photoIds.map((id: string) =>
+  const photos = (observation.photoIds || []).map((id: string) =>
     selectImageById(state, id),
   );
   return {
