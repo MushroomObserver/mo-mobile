@@ -35,6 +35,13 @@ export const { selectAll, selectById, selectEntities, selectIds, selectTotal } =
 
 
 export const selectByIds = createSelector(selectAll, (items, ids) => filter(items, item => includes(ids, item.id) ))
-export const selectByDraftObservationId = createSelector(selectAll, (items, id) => filter(items, item => item.draftObservationId == id ))
+
+export const selectByDraftObservationId = createSelector(
+  [selectAll, (_, draftObservationId) => draftObservationId],
+  (items, draftObservationId) => {
+    return items.filter(item => item.draftObservationId === draftObservationId);
+  }
+);
+
 // Export the reducer, either as a default or named export
 export default reducer;

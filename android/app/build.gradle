@@ -86,11 +86,11 @@ android {
 
     namespace "org.mushroomobserver"
     defaultConfig {
-        applicationId "org.mushroomobserver.mobile"
+        applicationId "org.mushroomobserver"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 10101
-        versionName "1.1.1"
+        versionCode 10202
+        versionName "1.2.2"
     }
     signingConfigs {
         debug {

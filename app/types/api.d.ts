@@ -111,6 +111,7 @@ export interface PostObservationRequestParams extends ApiRequestParams {
   images?: string;
   initial_det?: string;
   is_collection_location?: boolean;
+  code?: string;
   latitude?: number;
   location: string;
   log?: boolean;
