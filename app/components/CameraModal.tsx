@@ -1,10 +1,11 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { StyleSheet } from 'react-native';
-import { Modal, Text, TouchableOpacity, View } from 'react-native-ui-lib';
+import { Button, Modal, Text, TouchableOpacity, View } from 'react-native-ui-lib';
 import { Camera, useCodeScanner, useCameraDevice, useCameraPermission, useLocationPermission } from 'react-native-vision-camera';
 import Exif from 'react-native-exif';
 import { CameraRoll } from "@react-native-camera-roll/camera-roll";
 import { nanoid } from '@reduxjs/toolkit';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 type VoidFunction = () => void;
 
@@ -30,8 +31,10 @@ export const CameraModal = ({
   const codeScanner = useCodeScanner({
     codeTypes: ['qr'],
     onCodeScanned: (codes) => {
-      codes.forEach((code) => {
-        setLastCode(code['value']);
+      codes.forEach((raw_code) => {
+        value = raw_code['value'];
+        const code = value.substring(value.lastIndexOf('/') + 1);
+        setLastCode(code);
       });
     }
   });
@@ -77,10 +80,10 @@ export const CameraModal = ({
             photoQualityBalance="quality"
           />
           <TouchableOpacity style={styles.sendCode} onPress={sendCode}>
-            <Text style={styles.buttonText}>Save Code</Text>
+            <Text style={styles.buttonText}>{ lastCode ? `Save ${lastCode}` : "Scanning..."}</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.closeCamera} onPress={closeToggle}>
-            <Text style={styles.buttonText}>Close</Text>
+          <TouchableOpacity style={styles.closeIcon} onPress={closeToggle}>
+            <Icon name="close" size={30} color="white" />
           </TouchableOpacity>
         </View>
       </Modal>
@@ -114,7 +117,7 @@ const styles = StyleSheet.create({
   sendCode: {
     position: 'absolute',
     bottom: 20,
-    left: '33%',
+    left: '18%',
     transform: [{ translateX: -50 }],
     backgroundColor: 'white',
     padding: 10,
@@ -123,11 +126,18 @@ const styles = StyleSheet.create({
   closeCamera: {
     position: 'absolute',
     bottom: 20,
-    left: '66%',
+    left: '18%',
     transform: [{ translateX: -50 }],
     backgroundColor: 'white',
     padding: 10,
     borderRadius: 5,
+  },
+  closeIcon: {
+    position: 'absolute',
+    top: 20, // Positioning from the top of the screen
+    left: 20, // Positioning from the left side
+    padding: 10,
+    zIndex: 1, // Ensure it stays on top of other components
   },
   buttonText: {
     fontSize: 20,
