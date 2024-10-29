@@ -89,8 +89,8 @@ android {
         applicationId "org.mushroomobserver"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 10202
-        versionName "1.2.3"
+        versionCode 10204
+        versionName "1.2.4"
     }
     signingConfigs {
         debug {
